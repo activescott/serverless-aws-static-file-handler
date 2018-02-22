@@ -38,8 +38,8 @@ In your `serverless.yml` file, reference the handler function from above to prov
         
         # The following example uses a path placeholder to serve all files directly in the vendor/ directory:
         - http:
-          path: vendor/{url}
-          method: get
+            path: vendor/{url}
+            method: get
         
         # Add a + to the path placeholder to route all subpaths to your handler. In this example, /css/file.css and /css/subdir/file2.css will both be handled:
         - http:
