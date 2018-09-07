@@ -15,11 +15,11 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^4.1.0",
+    "serverless": "^1.26.1",
     "standard": "^10.0.3"
   },
   "dependencies": {
     "bluebird": "^3.5.1",
-    "mustache": "^2.3.0",
-    "serverless": "^1.25.0"
+    "mustache": "^2.3.0"
   }
 }
