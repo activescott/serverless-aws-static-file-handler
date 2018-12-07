@@ -1,4 +1,5 @@
 [![npm version](https://badge.fury.io/js/serverless-aws-static-file-handler.svg)](https://badge.fury.io/js/serverless-aws-static-file-handler)
+[![Build Status](https://travis-ci.org/activescott/serverless-aws-static-file-handler.svg?branch=master)](https://travis-ci.org/activescott/serverless-aws-static-file-handler)
 [![license](https://img.shields.io/npm/l/serverless-aws-static-file-handler.svg)](https://www.npmjs.com/package/serverless-aws-static-file-handler)
 
 # serverless-aws-static-file-handler
