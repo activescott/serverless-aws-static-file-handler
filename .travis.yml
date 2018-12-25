@@ -3,5 +3,4 @@ node_js:
   - "node"
   - "lts/*"
   - "8"
-cache: yarn
 script: cd ./src; yarn lint && yarn test
