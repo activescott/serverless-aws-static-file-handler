@@ -3,7 +3,10 @@ node_js:
   - "node"
   - "lts/*"
   - "8"
-cache: yarn
+cache:
+  yarn: true # https://docs.travis-ci.com/user/caching#yarn-cache
+  directories:
+    - src/node_modules
 before_install: cd ./src
 install: yarn
 script:
