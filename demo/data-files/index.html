@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  </head>
+
+  <div id="valid" style="border: 1px solid gray">
+    These should all work and load valid images:
+  </div>
+
+  <div id="invalid403" style="border: 1px solid gray">
+    These should all be returning 403:
+  </div>
+
+  <div id="invalid404" style="border: 1px solid gray">
+    These should all be returning 404:
+  </div>
+
+  <script lang="javascript">
+    const validPaths = [
+      "png",
+      "jpg",
+      "binary/glyphicons-halflings-regular.woff2",
+      "binary/subdir/png.png"
+    ]
+
+    const invalid403 = [
+      "ff404.png",
+      "jpeg404.jpg",
+      "subdir404/ff.png",
+      "subdir/ff404.png",
+    ]
+
+    const invalid404 = [
+      "binary/404-glyphicons-halflings-regular.woff2",
+      "binary/subdir/404-png.png"
+    ]
+    main()
+
+    async function main() {
+      await addPathsToList(validPaths, document.querySelector("#valid"))
+      await addPathsToList(invalid403, document.querySelector("#invalid403"))
+      await addPathsToList(invalid404, document.querySelector("#invalid404"))
+    }
+
+    async function addPathsToList(paths, parentElm) {
+      let ul = document.createElement("ul")
+      parentElm.appendChild(ul)
+      paths.forEach(async path => {
+        console.log("adding path:", path)
+        let contentType
+        let response
+        let lastError
+        try {
+          response = await fetch(path)
+          contentType = response.headers.get("Content-type")
+          if (!response.ok)
+            throw new Error(`Error response status: ${response.status}: ${response.statusText}`)
+        } catch (err) {
+          lastError = err
+          console.error("Error fetching path", path, ":", err)
+          contentType = `ERROR/${err.message}`
+        }
+        let blob = null
+        try {
+          if (response)
+            blob = await response.blob()
+        } catch (err) {
+          lastError = err
+          console.error("Error getting blob for path", path, ":", err)
+        }
+
+        const li = document.createElement("li")
+        li.style.color = !lastError ? "currentColor" : "red"
+        const img = document.createElement("img")
+        img.style.cssText = "border: 1px solid orange; display:inline-block; width: 32px; height: 32px"
+        if (blob) {
+          img.src = URL.createObjectURL(blob)
+        }
+
+        li.appendChild(img)
+        li.append(` ${path}`)
+        const span = document.createElement("span")
+
+        span.append(` (Content-Type: ${contentType})`)
+        li.appendChild(span)
+        ul.appendChild(li)
+      })
+    }
+  </script>
+</html>

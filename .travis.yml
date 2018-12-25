@@ -4,3 +4,4 @@ node_js:
   - "lts/*"
   - "6"
 cache: yarn
+script: yarn lint && yarn test

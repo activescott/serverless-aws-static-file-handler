@@ -1,0 +1,17 @@
+{
+  "name": "static-file-handler-demo-proxy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "destroy": "serverless remove",
+    "lint": "prettier --write \"./**/*.{js,md,yml,json,html}\""
+  },
+  "devDependencies": {
+    "prettier": "^1.15.3",
+    "serverless": "^1.35.1",
+    "serverless-apigw-binary": "^0.4.4"
+  },
+  "dependencies": {}
+}
