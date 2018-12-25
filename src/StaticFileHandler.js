@@ -1,6 +1,7 @@
 "use strict"
 const assert = require("assert")
 const fs = require("fs")
+const mimetypes = require("mime-types")
 const Mustache = require("mustache")
 const path = require("path")
 const util = require("util")
@@ -11,45 +12,6 @@ const D = new Diag("StaticFileHandler")
 
 const readFileAsync = util.promisify(fs.readFile)
 const accessAsync = util.promisify(fs.access)
-
-const typeMap = {
-  // see https://www.iana.org/assignments/media-types/media-types.xhtml
-  html: "text/html",
-  md: "text/markdown",
-  css: "text/css",
-  js: "application/javascript",
-  svg: "image/svg+xml",
-  png: "image/png",
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  gif: "image/gif",
-  json: "application/json",
-  xml: "application/xml",
-  zip: "application/zip",
-  pdf: "application/pdf",
-  mp4: "audio/mpeg",
-  m4a: "audio/mpeg",
-  ico: "image/x-icon",
-  woff2: "application/font-woff2; charset=utf-8",
-  woff: "application/font-woff; charset=utf-8",
-  ttf: "application/font-sfnt",
-  otf: "application/font-sfnt"
-}
-const binaryTypes = [
-  typeMap["png"],
-  typeMap["jpg"],
-  typeMap["jpeg"],
-  typeMap["gif"],
-  typeMap["zip"],
-  typeMap["pdf"],
-  typeMap["mp4"],
-  typeMap["m4a"],
-  typeMap["ico"],
-  typeMap["woff2"],
-  typeMap["woff"],
-  typeMap["ttf"],
-  typeMap["otf"]
-]
 
 class StaticFileHandler {
   /**
@@ -66,21 +28,35 @@ class StaticFileHandler {
   }
 
   static getMimeType(filePath) {
-    let parts = filePath.split(".")
-    var mimeType = ""
-    if (parts.length > 0) {
-      let extension = parts[parts.length - 1]
-      if (typeMap.hasOwnProperty(extension)) {
-        mimeType = typeMap[extension]
-      } else {
-        mimeType = "application/octet-stream" // https://stackoverflow.com/questions/20508788/do-i-need-content-type-application-octet-stream-for-file-download#20509354
-      }
-    }
-    return mimeType
+    return mimetypes.lookup(filePath) || "application/octet-stream"
   }
 
   static isBinaryType(mimeType) {
-    return binaryTypes.indexOf(mimeType) >= 0
+    const mimeCharset = mimetypes.charset(mimeType)
+    /* Using https://w3techs.com/technologies/overview/character_encoding/all
+     * to be more comprehensive go through those at https://www.iana.org/assignments/character-sets/character-sets.xhtml
+     */
+    const textualCharSets = [
+      "UTF-8",
+      "ISO-8859-1",
+      "Windows-1251",
+      "Windows-1252",
+      "Shift_JIS",
+      "GB2312",
+      "EUC-KR",
+      "ISO-8859-2",
+      "GBK",
+      "Windows-1250",
+      "EUC-JP",
+      "Big5",
+      "ISO-8859-15",
+      "Windows-1256",
+      "ISO-8859-9"
+    ]
+    const found = textualCharSets.find(
+      cs => 0 === cs.localeCompare(mimeCharset, "en", { sensitivity: "base" })
+    )
+    return found === undefined || found === null
   }
 
   async get(event, context) {

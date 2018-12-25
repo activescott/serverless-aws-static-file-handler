@@ -26,6 +26,7 @@
     "serverless": "^1.34.1"
   },
   "dependencies": {
+    "mime-types": "^2.1.21",
     "mustache": "^2.3.0"
   },
   "peerDependencies": {
