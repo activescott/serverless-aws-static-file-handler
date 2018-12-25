@@ -6,4 +6,6 @@ node_js:
 cache: yarn
 before_install: cd ./src
 install: yarn
-script:  yarn lint && yarn test
+script:
+  - yarn lint
+  - yarn test
