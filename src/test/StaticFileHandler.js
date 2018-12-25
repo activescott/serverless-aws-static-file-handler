@@ -55,19 +55,6 @@ describe("StaticFileHandler", function() {
       })
     })
 
-    it("should return a mime/type of application/octet-stream for .map files", function() {
-      let event = mockEvent({ path: "vendor/bootstrap.min.css.map" })
-      let h = new StaticFileHandler(STATIC_FILES_PATH)
-      return h.get(event, null).then(response => {
-        expect(response).to.have.property("headers")
-        expect(response.headers).to.have.property("Content-Type")
-        expect(response.headers["Content-Type"]).to.equal(
-          "application/octet-stream"
-        )
-        return response
-      })
-    })
-
     it.skip("(integration:lambda no longer supported) should work with non-lambdaproxy requests", function() {
       let event = {
         path: {
@@ -190,6 +177,48 @@ describe("StaticFileHandler", function() {
       return expect(h.get(event, context)).to.eventually.be.rejectedWith(
         /The event.path is an object but there are no properties. This likely means it is a lambda integration but there are no path parameters\/variables defined. Check your serverless.yml./
       )
+    })
+
+    describe("MIME Types", function () {
+      it(".map => application/octet-stream", async function() {
+        let event = mockEvent({ path: "vendor/bootstrap.min.css.map" })
+        let h = new StaticFileHandler(STATIC_FILES_PATH)
+        const response = await h.get(event, null)
+        expect(response).to.haveOwnProperty("statusCode").that.equals(200)
+        expect(response).to.have.property("headers")
+        expect(response.headers).to.have.property("Content-Type").that.equals("application/octet-stream")
+        return response
+      })
+
+      it(".png => image/png", async function() {
+        let event = mockEvent({ path: "png.png" })
+        let h = new StaticFileHandler(STATIC_FILES_PATH)
+        const response = await h.get(event, null)
+        expect(response).to.haveOwnProperty("statusCode").that.equals(200)
+        expect(response).to.have.property("headers")
+        expect(response.headers).to.have.property("Content-Type").that.equals("image/png")
+        return response
+      })
+
+      it(".jpg => image/jpg", async function() {
+        let event = mockEvent({ path: "jpg.jpg" })
+        let h = new StaticFileHandler(STATIC_FILES_PATH)
+        const response = await h.get(event, null)
+        expect(response).to.haveOwnProperty("statusCode").that.equals(200)
+        expect(response).to.have.property("headers")
+        expect(response.headers).to.have.property("Content-Type").that.equals("image/jpeg")
+        return response
+      })
+
+      it(".woff2 => font/woff2", async function() {
+        let event = mockEvent({ path: "fonts/glyphicons-halflings-regular.woff2" })
+        let h = new StaticFileHandler(STATIC_FILES_PATH)
+        const response = await h.get(event, null)
+        expect(response).to.haveOwnProperty("statusCode").that.equals(200)
+        expect(response).to.have.property("headers")
+        expect(response.headers).to.have.property("Content-Type").that.equals("application/font-woff2; charset=utf-8")
+        return response
+      })
     })
   })
 })
