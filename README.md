@@ -1,8 +1,10 @@
+# serverless-aws-static-file-handler
+
 [![npm version](https://badge.fury.io/js/serverless-aws-static-file-handler.svg)](https://badge.fury.io/js/serverless-aws-static-file-handler)
 [![Build Status](https://travis-ci.org/activescott/serverless-aws-static-file-handler.svg?branch=master)](https://travis-ci.org/activescott/serverless-aws-static-file-handler)
+[![Coverage Status](https://coveralls.io/repos/github/activescott/serverless-aws-static-file-handler/badge.svg?branch=master)](https://coveralls.io/github/activescott/serverless-aws-static-file-handler?branch=master)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![license](https://img.shields.io/npm/l/serverless-aws-static-file-handler.svg)](https://www.npmjs.com/package/serverless-aws-static-file-handler)
-
-# serverless-aws-static-file-handler
 
 An easy way to host the front-end of your web applications on [Serverless framework](https://github.com/serverless/serverless) on AWS Lambda along with their APIs written in Serverless.
 

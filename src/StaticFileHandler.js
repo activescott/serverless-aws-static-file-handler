@@ -6,10 +6,6 @@ const Mustache = require("mustache")
 const path = require("path")
 const util = require("util")
 
-const Diag = require("./Diag")
-
-const D = new Diag("StaticFileHandler")
-
 const readFileAsync = util.promisify(fs.readFile)
 const accessAsync = util.promisify(fs.access)
 
@@ -69,7 +65,6 @@ class StaticFileHandler {
     }
     let requestPath
     if (event.pathParameters) {
-      //D.log("Found event.pathParameters:", event.pathParameters)
       requestPath = ""
       /*
        * event.path is an object when `integration: lambda` and there is a greedy path parameter
@@ -160,7 +155,7 @@ class StaticFileHandler {
   ) {
     if (!mimeType) {
       let msg = "Unrecognized MIME type for file " + filePath
-      D.error(msg)
+      console.error(msg)
       throw new Error(msg)
     }
     if (
