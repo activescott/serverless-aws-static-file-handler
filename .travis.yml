@@ -27,13 +27,13 @@ jobs:
       script: echo "Deploying to npm ..." # this also prevents tests (which have already run in prior stage); https://docs.travis-ci.com/user/build-stages/#build-stages-and-deployments
       before_deploy: # NOTE: only be triggered if Travis CI is actually deploying; https://docs.travis-ci.com/user/deployment/npm/#running-commands-before-and-after-deploy
         - |
-            if [ "$TRAVIS_TAG" = "publish-patch" ]; then
-              npm version patch
-            elif [ "$TRAVIS_TAG" = "publish-minor" ]; then
-              npm version minor
-            elif [ "$TRAVIS_TAG" = "publish-major" ]; then
-              npm version major
-            fi
+          if [ "$TRAVIS_TAG" = "publish-patch" ]; then
+            npm version patch
+          elif [ "$TRAVIS_TAG" = "publish-minor" ]; then
+            npm version minor
+          elif [ "$TRAVIS_TAG" = "publish-major" ]; then
+            npm version major
+          fi
       deploy:
         - provider: npm
           email: scott@willeke.com
