@@ -1,28 +1,63 @@
 language: node_js
 node_js:
-  - node
-  #- lts/*
-  #- "8"
+  - "node"
+  - "lts/*"
+  - "8"
 cache:
-  yarn: true
+  npm: true
   directories:
     - src/node_modules
+
+# Do these run for all jobs/stages?
 before_install: cd ./src
-install: yarn
+install: npm i
+
 script:
-  - yarn lint
-  - yarn test
-after_success: yarn coverage
-deploy:
-  - provider: npm
-    email: scott@willeke.com
-    api_key:
-      secure: XXXXXXXXglWsZuRuVlaYBpGtDJYGeWpABU/In7tesyJvVkbhW1sKhkO510uqrAWfJh0XiLhYMJrS1a2zeCIuBCdJE9cDaKF3zfWQkmMjOdoctAR+X7FoPh/4QP12STbK9x5TNk62b/kjJVCkS0udaOLnSf1LEXLPVqzYEt1OqaWFrFRIFWtiKMaMAMHKCT3qcHjar/TqYecKzxMo1tpSSA4KQ20uYoDnMjGAVhtESegM69e360MVsHYKANN5lJbM9MBap1UihFfMLPBq2rVu7dClkrKW9OKbFD7Zrnn0yX52PGmUm+MzZASZOlyJFs8ssqrMAlrurhoM59264W9qYBPcOH8464aK6AvevoFRSYLORIQ5rlWaLTpIi1eo+S4kzaEhZWSv0nmQhRex+RnpznCfvpG/L0O/2YchiVps3CW5NGJ5dkJIBi8uC+WQ2278hONLgOmVTbpAPrRmfH4+2+BAHYQjOeBmVxbb+mrpT5IQsPpE9Of/Ev/62CeTkTDqOX+EeLc6CsleNRvAqvPdg9UV9s/2wV697L+HA4dOtWf700nQ6ZC3QSWgy38+3S/rj204wk3Osu/GJUh7RTvpNJWCOMnEl1YtndPtrez21Ye4Jj1HGMDI192wKeByeHkbKwISt6iRapQ0uQkCzAvBGXJu3BStLjaqOgt0TWmPGWhHlA00SZg=
-    on: # https://docs.travis-ci.com/user/deployment#conditional-releases-with-on
-      tags: true
-      node: "node"
-      repo: activescott/serverless-aws-static-file-handler
-      # TODO: FIIXME master:
-      branch: v2
-      # only if the tag that triggered this build was "publish"
-      condition: "$TRAVIS_TAG = publish"
+  - echo "Running tests against $(node -v) ..."
+  - npm run lint
+  - npm run test
+
+jobs:
+  include:
+    - stage: Report Coverage
+      node_js: "node"
+      script: npm run coverage
+    - stage: Deploy NPM
+      node_js: "node"
+      script: echo "Deploying to npm ..." # this also prevents tests (which have already run in prior stage); https://docs.travis-ci.com/user/build-stages/#build-stages-and-deployments
+      before_deploy: # NOTE: only be triggered if Travis CI is actually deploying; https://docs.travis-ci.com/user/deployment/npm/#running-commands-before-and-after-deploy
+        - |
+            if [ "$TRAVIS_TAG" = "publish-patch" ]; then
+              npm version patch
+            elif [ "$TRAVIS_TAG" = "publish-minor" ]; then
+              npm version minor
+            elif [ "$TRAVIS_TAG" = "publish-major" ]; then
+              npm version major
+            fi
+      deploy:
+        - provider: npm
+          email: scott@willeke.com
+          api_key:
+            secure: XXXXXXXXglWsZuRuVlaYBpGtDJYGeWpABU/In7tesyJvVkbhW1sKhkO510uqrAWfJh0XiLhYMJrS1a2zeCIuBCdJE9cDaKF3zfWQkmMjOdoctAR+X7FoPh/4QP12STbK9x5TNk62b/kjJVCkS0udaOLnSf1LEXLPVqzYEt1OqaWFrFRIFWtiKMaMAMHKCT3qcHjar/TqYecKzxMo1tpSSA4KQ20uYoDnMjGAVhtESegM69e360MVsHYKANN5lJbM9MBap1UihFfMLPBq2rVu7dClkrKW9OKbFD7Zrnn0yX52PGmUm+MzZASZOlyJFs8ssqrMAlrurhoM59264W9qYBPcOH8464aK6AvevoFRSYLORIQ5rlWaLTpIi1eo+S4kzaEhZWSv0nmQhRex+RnpznCfvpG/L0O/2YchiVps3CW5NGJ5dkJIBi8uC+WQ2278hONLgOmVTbpAPrRmfH4+2+BAHYQjOeBmVxbb+mrpT5IQsPpE9Of/Ev/62CeTkTDqOX+EeLc6CsleNRvAqvPdg9UV9s/2wV697L+HA4dOtWf700nQ6ZC3QSWgy38+3S/rj204wk3Osu/GJUh7RTvpNJWCOMnEl1YtndPtrez21Ye4Jj1HGMDI192wKeByeHkbKwISt6iRapQ0uQkCzAvBGXJu3BStLjaqOgt0TWmPGWhHlA00SZg=
+          on: # https://docs.travis-ci.com/user/deployment#conditional-releases-with-on
+            tags: true
+            repo: activescott/serverless-aws-static-file-handler
+            # TODO: FIIXME master:
+            branch: v2
+            # only if the tag that triggered this build was "publish"
+            condition: "$TRAVIS_TAG = publish-patch || $TRAVIS_TAG = publish-minor || $TRAVIS_TAG = publish-major"
+    - stage: Push GitHub Release
+      node_js: "node"
+      script: echo "Deploying to GitHub releases ..."
+      deploy:
+        - provider: releases
+          api_key:
+            secure: XXXXXXXXglWsZuRuVlaYBpGtDJYGeWpABU/In7tesyJvVkbhW1sKhkO510uqrAWfJh0XiLhYMJrS1a2zeCIuBCdJE9cDaKF3zfWQkmMjOdoctAR+X7FoPh/4QP12STbK9x5TNk62b/kjJVCkS0udaOLnSf1LEXLPVqzYEt1OqaWFrFRIFWtiKMaMAMHKCT3qcHjar/TqYecKzxMo1tpSSA4KQ20uYoDnMjGAVhtESegM69e360MVsHYKANN5lJbM9MBap1UihFfMLPBq2rVu7dClkrKW9OKbFD7Zrnn0yX52PGmUm+MzZASZOlyJFs8ssqrMAlrurhoM59264W9qYBPcOH8464aK6AvevoFRSYLORIQ5rlWaLTpIi1eo+S4kzaEhZWSv0nmQhRex+RnpznCfvpG/L0O/2YchiVps3CW5NGJ5dkJIBi8uC+WQ2278hONLgOmVTbpAPrRmfH4+2+BAHYQjOeBmVxbb+mrpT5IQsPpE9Of/Ev/62CeTkTDqOX+EeLc6CsleNRvAqvPdg9UV9s/2wV697L+HA4dOtWf700nQ6ZC3QSWgy38+3S/rj204wk3Osu/GJUh7RTvpNJWCOMnEl1YtndPtrez21Ye4Jj1HGMDI192wKeByeHkbKwISt6iRapQ0uQkCzAvBGXJu3BStLjaqOgt0TWmPGWhHlA00SZg=
+          draft: true
+          on: # https://docs.travis-ci.com/user/deployment#conditional-releases-with-on
+            tags: true
+            repo: activescott/serverless-aws-static-file-handler
+            # TODO: FIIXME master:
+            branch: v2
+            # only if the tag that triggered this build was "publish"
+            condition: "$TRAVIS_TAG = publish-patch || $TRAVIS_TAG = publish-minor || $TRAVIS_TAG = publish-major"
