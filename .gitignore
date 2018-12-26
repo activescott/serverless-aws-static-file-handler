@@ -58,3 +58,8 @@ typings/
 .env
 
 demo/.serverless
+
+.vscode/
+
+/junk.js
+/todo.md
