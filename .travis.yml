@@ -21,19 +21,15 @@ jobs:
   include:
     - stage: Report Coverage
       node_js: "node"
-      script: npm run coverage
+      script: echo "Running coverage report ..."
+      after_success: npm run coverage # in after_success because we don't wan't to fail the build if this failed.
     - stage: Deploy NPM
       node_js: "node"
-      script: echo "Deploying to npm ..." # this also prevents tests (which have already run in prior stage); https://docs.travis-ci.com/user/build-stages/#build-stages-and-deployments
+      script: echo "Deploying to npm ..." # explicitly having a tag here also prevents default script (i.e. tests for node_js), which have already run in prior stage: https://docs.travis-ci.com/user/build-stages/#build-stages-and-deployments
       before_deploy: # NOTE: only be triggered if Travis CI is actually deploying; https://docs.travis-ci.com/user/deployment/npm/#running-commands-before-and-after-deploy
         - |
-          if [ "$TRAVIS_TAG" = "publish-patch" ]; then
-            npm version patch
-          elif [ "$TRAVIS_TAG" = "publish-minor" ]; then
-            npm version minor
-          elif [ "$TRAVIS_TAG" = "publish-major" ]; then
-            npm version major
-          fi
+          echo "Running npm version --no-git-tag-version $TRAVIS_TAG ..."
+          npm version --no-git-tag-version $TRAVIS_TAG
       deploy:
         - provider: npm
           email: scott@willeke.com
@@ -44,5 +40,5 @@ jobs:
             repo: activescott/serverless-aws-static-file-handler
             # TODO: FIIXME master:
             branch: v2
-            # only if the tag that triggered this build was "publish"
-            condition: "$TRAVIS_TAG = publish-patch || $TRAVIS_TAG = publish-minor || $TRAVIS_TAG = publish-major"
+            # only if the tag that triggered this build was "vD.D.D" with a possible tag postfix (i.e. semver)
+            condition: '$TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+(\-.*)?$'
