@@ -51,7 +51,6 @@
     "dev": "clear; mocha --watch",
     "lint": "prettier -l \"../**/*.{js,md,yml,json,html}\"",
     "lint-fix": "prettier --write \"../**/*.{js,md,yml,json,html}\"",
-    "postversion": "git push && git push --tags",
     "test": "nyc --reporter=html --reporter=text mocha"
   },
   "license": "MIT",
