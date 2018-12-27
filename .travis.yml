@@ -3,14 +3,15 @@ node_js:
   - "node"
   - "lts/*"
   - "8"
+
 cache:
-  npm: true
+  npm: false # because we're using `npm ci` as install script (but not auto-detected because package-lock.json not in root); https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#npm-ci-support
   directories:
-    - src/node_modules
+    - $HOME/.npm # https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#npm-ci-support
 
 # Do these run for all jobs/stages?
 before_install: cd ./src
-install: npm i
+install: npm ci # https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#npm-ci-support
 
 script:
   - echo "Running tests against $(node -v) ..."
@@ -31,6 +32,7 @@ jobs:
           echo "Running npm version --no-git-tag-version $TRAVIS_TAG ..."
           npm version --no-git-tag-version $TRAVIS_TAG
       deploy:
+        # NOTE: Travis CI npm provider doesn't fail the build when deployment fails. Must read the logs to tell - I figure we'll just notice that the package never ended up deployed.
         - provider: npm
           email: scott@willeke.com
           api_key:
