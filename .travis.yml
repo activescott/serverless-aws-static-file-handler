@@ -35,6 +35,7 @@ jobs:
           email: scott@willeke.com
           api_key:
             secure: XXXXXXXXglWsZuRuVlaYBpGtDJYGeWpABU/In7tesyJvVkbhW1sKhkO510uqrAWfJh0XiLhYMJrS1a2zeCIuBCdJE9cDaKF3zfWQkmMjOdoctAR+X7FoPh/4QP12STbK9x5TNk62b/kjJVCkS0udaOLnSf1LEXLPVqzYEt1OqaWFrFRIFWtiKMaMAMHKCT3qcHjar/TqYecKzxMo1tpSSA4KQ20uYoDnMjGAVhtESegM69e360MVsHYKANN5lJbM9MBap1UihFfMLPBq2rVu7dClkrKW9OKbFD7Zrnn0yX52PGmUm+MzZASZOlyJFs8ssqrMAlrurhoM59264W9qYBPcOH8464aK6AvevoFRSYLORIQ5rlWaLTpIi1eo+S4kzaEhZWSv0nmQhRex+RnpznCfvpG/L0O/2YchiVps3CW5NGJ5dkJIBi8uC+WQ2278hONLgOmVTbpAPrRmfH4+2+BAHYQjOeBmVxbb+mrpT5IQsPpE9Of/Ev/62CeTkTDqOX+EeLc6CsleNRvAqvPdg9UV9s/2wV697L+HA4dOtWf700nQ6ZC3QSWgy38+3S/rj204wk3Osu/GJUh7RTvpNJWCOMnEl1YtndPtrez21Ye4Jj1HGMDI192wKeByeHkbKwISt6iRapQ0uQkCzAvBGXJu3BStLjaqOgt0TWmPGWhHlA00SZg=
+          skip_cleanup: true # because we use npm version in before_deploy to edit the package version
           on: # https://docs.travis-ci.com/user/deployment#conditional-releases-with-on
             tags: true
             repo: activescott/serverless-aws-static-file-handler
