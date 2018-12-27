@@ -5,7 +5,9 @@
   "version": "0.0.0",
   "main": "StaticFileHandler.js",
   "author": {
-    "name": "Scott Willeke"
+    "name": "Scott Willeke",
+    "email": "scott@willeke.com",
+    "url": "https://scott.willeke.com/"
   },
   "repository": {
     "type": "git",
@@ -45,9 +47,6 @@
   ],
   "scripts": {
     "coverage": "npm run test && nyc report --reporter=text-lcov | coveralls",
-    "deploy-major": "bumped release major",
-    "deploy-minor": "bumped release minor",
-    "deploy-patch": "bumped release patch",
     "dev": "clear; mocha --watch",
     "lint": "prettier -l \"../**/*.{js,md,yml,json,html}\"",
     "lint-fix": "prettier --write \"../**/*.{js,md,yml,json,html}\"",
