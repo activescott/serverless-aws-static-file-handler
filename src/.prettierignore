@@ -1,0 +1,4 @@
+../.vscode/
+../demo/.serverless/
+.nyc_output/
+coverage/

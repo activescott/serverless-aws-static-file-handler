@@ -1,0 +1,58 @@
+{
+  "name": "serverless-aws-static-file-handler",
+  "description": "Easily serve static files with the Serverless Framework on AWS Lambda.",
+  "homepage": "https://github.com/activescott/serverless-aws-static-file-handler#readme",
+  "version": "0.0.0",
+  "main": "StaticFileHandler.js",
+  "author": {
+    "name": "Scott Willeke",
+    "email": "scott@willeke.com",
+    "url": "https://scott.willeke.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/activescott/serverless-aws-static-file-handler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/activescott/serverless-aws-static-file-handler/issues"
+  },
+  "keywords": [
+    "aws-lambda",
+    "binary",
+    "nodejs",
+    "serverless",
+    "serverless-architectures",
+    "serverless-framework",
+    "serverless-functions"
+  ],
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "mime-types": "^2.1.21",
+    "mustache": "^2.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "coveralls": "^3.0.2",
+    "mocha": "^4.1.0",
+    "nyc": "^13.1.0",
+    "prettier": "^1.15.3",
+    "serverless": "^1.34.1",
+    "sinon": "^7.2.2"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "files": [
+    "StaticFileHandler.js",
+    "error.html"
+  ],
+  "scripts": {
+    "coverage": "npm run test && nyc report --reporter=text-lcov | coveralls",
+    "dev": "clear; mocha --watch",
+    "lint": "prettier -l \"../**/*.{js,md,yml,json,html}\"",
+    "lint-fix": "prettier --write \"../**/*.{js,md,yml,json,html}\"",
+    "test": "nyc --reporter=html --reporter=text mocha"
+  },
+  "license": "MIT"
+}
