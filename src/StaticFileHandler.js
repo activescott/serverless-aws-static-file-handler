@@ -94,15 +94,11 @@ class StaticFileHandler {
       requestPath = event.path
     }
     let filePath = path.join(this.clientFilesPath, requestPath)
-    return this.readFileAsResponse(filePath, context)
-      .then(response => {
-        return response
-      })
-      .catch(err => {
-        throw new Error(
-          `Unable to read client file '${requestPath}'. Error: ${err}`
-        )
-      })
+    return this.readFileAsResponse(filePath, context).catch(err => {
+      throw new Error(
+        `Unable to read client file '${requestPath}'. Error: ${err}`
+      )
+    })
   }
 
   /**

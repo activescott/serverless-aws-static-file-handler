@@ -1,8 +1,7 @@
 service: static-file-handler-demo-proxy
 
 plugins:
-  # TODO: Replace with built-in plugin
-  - serverless-apigw-binary
+  - serverless-aws-static-file-handler/plugins/BinaryMediaTypes
 
 custom:
   # TODO: Replace with built-in plugin
