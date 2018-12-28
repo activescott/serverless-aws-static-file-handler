@@ -37,7 +37,8 @@
     "mocha": "^4.1.0",
     "nyc": "^13.1.0",
     "prettier": "^1.15.3",
-    "serverless": "^1.34.1"
+    "serverless": "^1.34.1",
+    "sinon": "^7.2.2"
   },
   "engines": {
     "node": ">=8"
@@ -53,8 +54,5 @@
     "lint-fix": "prettier --write \"../**/*.{js,md,yml,json,html}\"",
     "test": "nyc --reporter=html --reporter=text mocha"
   },
-  "license": "MIT",
-  "peerDependencies": {
-    "serverless-apigwy-binary": "^0.1.0"
-  }
+  "license": "MIT"
 }

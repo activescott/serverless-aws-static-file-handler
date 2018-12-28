@@ -12,56 +12,60 @@ It is a fast and easy way to get started and makes it trivial to deploy your web
 
 # Usage
 
-Import it like:
+Import & initialize:
 
     const StaticFileHandler = require('serverless-aws-static-file-handler')
 
+    # configure where to serve files from:
+    const clientFilesPath = path.join(__dirname, "./data-files/")
+    const fileHandler = new StaticFileHandler(clientFilesPath)
+
 Define a handler in your code as follows:
 
-    module.exports.staticfile = (event, context, callback) => {
-      // clientFilesPath is a local directory that serverless will automatically package and deploy to AWS Lambda along with your code
-      const clientFilesPath = path.join(__dirname, './data/public/')
-      return new StaticFileHandler(clientFilesPath).get(event, context)
-        .then(response => callback(null, response))
-        .catch(err => callback(err))
+    module.exports.html = async (event, context) => {
+      event.path = "index.html" // forcing a specific page for this handler, ignore requested path. This would serve ./data-files/index.html
+      return fileHandler.get(event, context)
     }
 
 In your `serverless.yml` file, reference the handler function from above to provide routes to your static files:
 
-    staticfiles:
-      handler: handler.staticfile
-      events:
-        # Serve some simple static files from the root:
-        - http:
-            path: index.html
-            method: get
-        - http:
-            path: index.js
-            method: get
-        - http:
-            path: style.css
+    functions:
+      html:
+        handler: handler.html
+        events:
+          - http:
+              path: /
+              method: get
+
+      # Note Binary files work too! See configuration information below
+      png:
+        handler: handler.png
+        events:
+          - http:
+              path: png
+              method: get
+
+      # The following example uses a path placeholder to serve all files directly in the /binary/ directory:
+      binary:
+        handler: handler.binary
+        events:
+          - http:
+            path: /binary/{pathvar+}
             method: get
 
-        # The following example uses a path placeholder to serve all files directly in the vendor/ directory:
-        - http:
-            path: vendor/{url}
-            method: get
+To serve binary content make sure that you setup the plugin in your serverless.yml like so:
 
-        # Add a + to the path placeholder to route all subpaths to your handler. In this example, /css/file.css and /css/subdir/file2.css will both be handled:
-        - http:
-            path: css/{csspath+}
-            method: get
-            contentHandling: CONVERT_TO_BINARY
+    plugins:
+      - serverless-aws-static-file-handler/plugins/BinaryMediaTypes
 
-        # Binary content works too. Just add `integration: lambda` and `contentHandling: CONVERT_TO_BINARY` to your http event (this configures API Gateway for Binary content):
-        - http:
-            path: images/myimage.png
-            method: get
-            integration: lambda # binary requires non-proxy API Gateway requests
-            contentHandling: CONVERT_TO_BINARY # serverless-apigwy-binary plugin required for contentHandling to work. Get it at https://www.npmjs.com/package/serverless-apigwy-binary
+    custom:
+      apiGateway:
+        binaryMediaTypes:
+          - "image/png"
+          - "image/jpeg"
 
-Some additional real-world examples are demonstrated in the [sheetmonkey-server project](https://github.com/activescott/sheetmonkey-server).
+Some additional real-world examples are demonstrated in the [demo](demo/serverless.yml).
 
 # Installation
 
-npm (`npm install serverless-aws-static-file-handler --save-dev`) or yarn (`yarn add serverless-aws-static-file-handler --dev`)
+npm: `npm install serverless-aws-static-file-handler --save-prod`

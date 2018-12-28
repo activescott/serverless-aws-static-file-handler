@@ -16,15 +16,12 @@ class BinaryMediaTypes {
       }
     }
     this.hooks = {
-      //"before:deploy:resources": this.beforeDeployResources.bind(this),
-      //"deploy:resources": this.deployResources.bind(this),
-      //"after:package:compileEvents": this.afterPackageCompileEvents.bind(this),
       "package:compileEvents": this.packageCompileEvents.bind(this)
     }
   }
 
   log(...args) {
-    args.unshift("aws-static-file-handler-BinaryMediaTypes:")
+    args.unshift("aws-static-file-handler (BinaryMediaTypes):")
     const msg = util.format(...args)
     this.serverless.cli.log(msg)
   }
@@ -35,42 +32,47 @@ class BinaryMediaTypes {
     return _.find(resources, r => r.Type === "AWS::ApiGateway::RestApi")
   }
 
+  readConfig() {
+    const service = this.serverless.service
+    if (
+      !service.custom ||
+      !service.custom.apiGateway ||
+      !service.custom.apiGateway.binaryMediaTypes ||
+      _.isEmpty(service.custom.apiGateway.binaryMediaTypes)
+    ) {
+      throw new Error(BinaryMediaTypes.Strings.CONFIG_ERROR)
+    }
+    return service.custom.apiGateway.binaryMediaTypes
+  }
+
   addBinaryMediaTypes(restApi) {
     if (!restApi) {
-      throw new Error("restApi argument expected!")
+      this.log(
+        "Amazon API Gateway RestApi resource not found. No BinaryMediaTypes will be added."
+      )
+      return
     }
     if (!restApi.Properties) {
       throw new Error("RestApi Properties property does not exist!")
     }
     // see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-binarymediatypes
-    const newTypes = [
-      "insertedBy/aws-static-file-handler-BinaryMediaTypes",
-      "application/octet-stream"
-    ]
-    if (newTypes) {
-      this.log("Adding the following BinaryMediaTypes to RestApi:", newTypes)
-    } else {
-      this.log(
-        "No BinaryMediaTypes configured. See https://github.com/activescott/serverless-aws-static-file-handler#usage for information on how to configure"
-      )
-      return
-    }
+    const newTypes = this.readConfig()
+    this.log("Adding the following BinaryMediaTypes to RestApi:", newTypes)
     const oldTypes = restApi.Properties["BinaryMediaTypes"] || []
     const combined = _.concat(oldTypes, newTypes)
     restApi.Properties["BinaryMediaTypes"] = combined
-    this.log("RestAPI BinaryMediaTypes is now:", combined)
+    this.log("RestApi BinaryMediaTypes are now:", combined)
   }
 
   packageCompileEvents() {
-    this.log("packageCompileEvents")
     const restApi = this.getRestApi()
     this.addBinaryMediaTypes(restApi)
   }
+}
 
-  afterPackageCompileEvents() {
-    this.log("afterPackageCompileEvents")
-    //this.log("this.serverless.service.provider.compiledCloudFormationTemplate.Resources:", this.serverless.service.provider.compiledCloudFormationTemplate.Resources)
-  }
+BinaryMediaTypes.Strings = {
+  CONFIG_ERROR:
+    "No BinaryMediaTypes configured. See https://github.com/activescott/serverless-aws-static-file-handler#usage for information on how to configure"
 }
 
 module.exports = BinaryMediaTypes

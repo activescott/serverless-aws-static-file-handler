@@ -4,9 +4,10 @@ plugins:
   - serverless-aws-static-file-handler/plugins/BinaryMediaTypes
 
 custom:
-  # TODO: Replace with built-in plugin
-  apigwBinary:
-    types:
+  apiGateway:
+    binaryMediaTypes:
+      - image/png
+      - image/jpeg
       - "*/*" # Using */* doesn't have side effects that I can tell. The HTML response works fine.
 
 provider:
@@ -14,11 +15,11 @@ provider:
   runtime: nodejs8.10
 
 functions:
-  binary:
-    handler: handler.binary
+  html:
+    handler: handler.html
     events:
       - http:
-          path: /binary/{pathvar+}
+          path: /
           method: get
   png:
     handler: handler.png
@@ -32,9 +33,9 @@ functions:
       - http:
           path: jpg
           method: get
-  html:
-    handler: handler.html
+  binary:
+    handler: handler.binary
     events:
       - http:
-          path: /
+          path: /binary/{pathvar+}
           method: get
