@@ -44,15 +44,18 @@
     "node": ">=8"
   },
   "files": [
-    "StaticFileHandler.js",
-    "error.html"
+    "error.html",
+    "plugins/BinaryMediaTypes.js",
+    "StaticFileHandler.js"
   ],
   "scripts": {
     "coverage": "npm run test && nyc report --reporter=text-lcov | coveralls",
     "dev": "clear; mocha --watch",
     "lint": "prettier -l \"../**/*.{js,md,yml,json,html}\"",
     "lint-fix": "prettier --write \"../**/*.{js,md,yml,json,html}\"",
-    "test": "nyc --reporter=html --reporter=text mocha"
+    "test": "nyc --reporter=html --reporter=text mocha",
+    "prepack": "cp ../README.md ./ ; cp ../LICENSE ./",
+    "postpack": "rm -f ./README.md ./LICENSE"
   },
   "license": "MIT"
 }
