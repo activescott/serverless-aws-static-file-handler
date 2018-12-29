@@ -13,6 +13,6 @@
     "serverless": "^1.35.1"
   },
   "dependencies": {
-    "serverless-aws-static-file-handler": "^2.0.0-beta1"
+    "serverless-aws-static-file-handler": "^2.0.0"
   }
 }
