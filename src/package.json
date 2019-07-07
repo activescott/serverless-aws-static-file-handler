@@ -34,10 +34,11 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.2",
+    "js-yaml": "^3.13.1",
     "mocha": "^4.1.0",
     "nyc": "^14.1.1",
     "prettier": "^1.15.3",
-    "serverless": "^1.34.1",
+    "serverless": "^1.46.1",
     "sinon": "^7.2.2"
   },
   "engines": {
