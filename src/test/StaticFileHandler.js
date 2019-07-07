@@ -33,7 +33,7 @@ describe("StaticFileHandler", function() {
   describe("constructor", function() {
     it("should not allow empty arg", function() {
       expect(() => new StaticFileHandler()).to.throw(
-        /clientFilesPath must be specified/
+        /^clientFilesPath must be specified$/
       )
     })
 
@@ -55,6 +55,20 @@ describe("StaticFileHandler", function() {
       })
     })
 
+    it("should validate event exist", function() {
+      const event = null
+      let h = new StaticFileHandler(STATIC_FILES_PATH)
+      return expect(h.get(event, null)).to.be.rejectedWith(
+        /event object not specified.$/
+      )
+    })
+
+    it("should validate event.path", function() {
+      const event = mockEvent({ NOPATH: "index.html" })
+      let h = new StaticFileHandler(STATIC_FILES_PATH)
+      return expect(h.get(event, null)).to.be.rejectedWith(/Empty path.$/)
+    })
+
     it.skip("(integration:lambda no longer supported) should work with non-lambdaproxy requests", function() {
       const event = {
         path: {
@@ -65,6 +79,18 @@ describe("StaticFileHandler", function() {
       return h.get(event, null).then(response => {
         return expect(response.body.length).to.equal(24040)
       })
+    })
+
+    it("integration:lambda no longer supported; should fail if not using lambda-proxy", function() {
+      const event = {
+        path: {
+          fonts: "fonts/glyphicons-halflings-regular.woff2"
+        }
+      }
+      let h = new StaticFileHandler(STATIC_FILES_PATH)
+      return expect(h.get(event, null)).to.be.rejectedWith(
+        /^API Gateway method does not appear to be setup for Lambda Proxy Integration/
+      )
     })
 
     it("should return text as text", function() {
@@ -112,6 +138,18 @@ describe("StaticFileHandler", function() {
       return expect(response)
         .to.eventually.haveOwnProperty("statusCode")
         .that.equals(404)
+    })
+
+    it("should use customErrorPagePath", async function() {
+      const event = mockEvent({ path: "doesntexist.404" })
+      let h = new StaticFileHandler(STATIC_FILES_PATH, "custom-error.html")
+      const response = h.get(event, null)
+      expect(response)
+        .to.eventually.haveOwnProperty("statusCode")
+        .that.equals(404)
+      return expect(response)
+        .to.eventually.haveOwnProperty("body")
+        .that.matches(/<title>CUSTOM<\/title>/)
     })
 
     /**
@@ -211,6 +249,23 @@ describe("StaticFileHandler", function() {
         expect(response)
           .to.have.property("isBase64Encoded")
           .that.equals(false)
+        return response
+      })
+
+      it("unknown-mime-type => application/octet-stream", async function() {
+        const event = mockEvent({ path: "unknown-mime-type.unknowntype" })
+        let h = new StaticFileHandler(STATIC_FILES_PATH)
+        const response = await h.get(event, null)
+        expect(response)
+          .to.haveOwnProperty("statusCode")
+          .that.equals(200)
+        expect(response)
+          .to.have.property("headers")
+          .that.has.property("Content-Type")
+          .that.equals("application/octet-stream")
+        expect(response)
+          .to.have.property("isBase64Encoded")
+          .that.equals(true)
         return response
       })
 
