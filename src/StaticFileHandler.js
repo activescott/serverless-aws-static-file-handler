@@ -56,20 +56,20 @@ class StaticFileHandler {
   }
 
   async get(event, context) {
-    await StaticFileHandler.validateLambdaProxyIntegration(event)
     if (!event) {
       throw new Error("event object not specified.")
     }
     if (!event.path) {
       throw new Error("Empty path.")
     }
+    await StaticFileHandler.validateLambdaProxyIntegration(event)
     let requestPath
     if (event.pathParameters) {
       requestPath = ""
       /*
        * event.path is an object when `integration: lambda` and there is a greedy path parameter
        * If there are zero properties, it is just "lambda integration" and no path parameters
-       * If ther are properites, it indicates there are path parameters.
+       * If there are properties, it indicates there are path parameters.
        * For example: The path parameter could be mapped like so in serverless.yml:
        * - http:
              path: fontsdir/{fonts+}
@@ -124,7 +124,7 @@ class StaticFileHandler {
     )
   }
 
-  static readStreamAsResponse(stream, context, statusCode = 200, mimeType) {
+  static readStreamAsResponse(stream, context, statusCode, mimeType) {
     let body
     let isBase64Encoded = false
     if (StaticFileHandler.isBinaryType(mimeType)) {
@@ -145,15 +145,11 @@ class StaticFileHandler {
   static readStringAsResponse(
     stringData,
     context,
-    statusCode = 200,
+    statusCode,
     mimeType,
-    isBase64Encoded = false
+    isBase64Encoded
   ) {
-    if (!mimeType) {
-      let msg = "Unrecognized MIME type for file " + filePath
-      console.error(msg)
-      throw new Error(msg)
-    }
+    assert(mimeType, "expected mimeType to always be provided")
     if (
       context &&
       "staticFileHandler" in context &&
@@ -177,7 +173,7 @@ class StaticFileHandler {
    * Returns a Promise with a response that is an HTML page with the specified error text on it.
    * @param {*string} errorText The error to add to the page.
    */
-  async responseAsError(errorText, statusCode = 400) {
+  async responseAsError(errorText, statusCode) {
     let filePath
     let customErrorPagePathIsValid
     if (this.customErrorPagePath) {
@@ -199,7 +195,7 @@ class StaticFileHandler {
   }
 
   /**
-   * Rejects if the specified event is not
+   * Rejects if the specified event is not Lambda Proxy integration
    */
   static async validateLambdaProxyIntegration(event) {
     // From https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format

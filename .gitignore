@@ -57,7 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 
-demo/.serverless
+examples/basic/.serverless
 
 .vscode/
 

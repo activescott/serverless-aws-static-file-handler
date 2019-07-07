@@ -35,7 +35,7 @@
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.2",
     "mocha": "^4.1.0",
-    "nyc": "^13.1.0",
+    "nyc": "^14.1.1",
     "prettier": "^1.15.3",
     "serverless": "^1.34.1",
     "sinon": "^7.2.2"
@@ -49,11 +49,10 @@
     "StaticFileHandler.js"
   ],
   "scripts": {
-    "coverage": "npm run test && nyc report --reporter=text-lcov | coveralls",
-    "dev": "clear; mocha --watch",
+    "test": "nyc --cwd ./ ./node_modules/.bin/mocha",
     "lint": "prettier -l \"../**/*.{js,md,yml,json,html}\"",
-    "lint-fix": "prettier --write \"../**/*.{js,md,yml,json,html}\"",
-    "test": "nyc --reporter=html --reporter=text mocha",
+    "lint-fix": "prettier --write \"../**/*.{js,md,yml,yaml,json,html}\"",
+    "coverage": "npm run test && nyc report --reporter=text-lcov | coveralls",
     "prepack": "cp ../README.md ./ ; cp ../LICENSE ./",
     "postpack": "rm -f ./README.md ./LICENSE"
   },

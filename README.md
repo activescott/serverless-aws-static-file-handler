@@ -1,16 +1,30 @@
+[![npm version](https://badge.fury.io/js/serverless-aws-static-file-handler.svg)](https://badge.fury.io/js/serverless-aws-static-file-handler)
+![npm](https://img.shields.io/npm/dt/serverless-aws-static-file-handler.svg?logo=npm)
+[![Build Status](https://travis-ci.org/activescott/serverless-aws-static-file-handler.svg)](https://travis-ci.org/activescott/serverless-aws-static-file-handler)
+[![Coverage Status](https://coveralls.io/repos/github/activescott/serverless-aws-static-file-handler/badge.svg)](https://coveralls.io/github/activescott/serverless-aws-static-file-handler)
+[![License](https://img.shields.io/github/license/activescott/serverless-aws-static-file-handler.svg)](https://github.com/activescott/serverless-aws-static-file-handler/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/activescott/serverless-aws-static-file-handler.svg?style=social)](https://github.com/activescott/serverless-aws-static-file-handler)
+
 # serverless-aws-static-file-handler
 
-[![npm version](https://badge.fury.io/js/serverless-aws-static-file-handler.svg)](https://badge.fury.io/js/serverless-aws-static-file-handler)
-[![Build Status](https://travis-ci.org/activescott/serverless-aws-static-file-handler.svg?branch=master)](https://travis-ci.org/activescott/serverless-aws-static-file-handler)
-[![Coverage Status](https://coveralls.io/repos/github/activescott/serverless-aws-static-file-handler/badge.svg?branch=master)](https://coveralls.io/github/activescott/serverless-aws-static-file-handler?branch=master)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![license](https://img.shields.io/npm/l/serverless-aws-static-file-handler.svg)](https://www.npmjs.com/package/serverless-aws-static-file-handler)
+Host the front-end of your web applications on [Serverless framework](https://github.com/serverless/serverless) on AWS Lambda right alongside the API.
 
-An easy way to host the front-end of your web applications on [Serverless framework](https://github.com/serverless/serverless) on AWS Lambda along with their APIs written in Serverless.
+It is a fast and easy way to get started and makes it trivial to deploy your web applications. If you need better response time in the future and get concerned about AWS costs of using Lambda to static content, you put CloudFront in front of your Serverless endpoints service static content.
 
-It is a fast and easy way to get started and makes it trivial to deploy your web applications. If you need better response time in the future and get concerned about AWS costs of using Lambda to static content, you put Cloud Front in front of your Serverless endpoints service static content.
+<!-- TOC -->
 
-# Usage
+- [Usage / Quick Start](#usage--quick-start)
+- [Prerequisites / Usage Requirements](#prerequisites--usage-requirements)
+- [Install](#install)
+- [Features](#features)
+- [Contributing 🤝](#contributing-🤝)
+- [Show your support](#show-your-support)
+- [Release Process (Deploying to NPM)](#release-process-deploying-to-npm)
+- [License 📝](#license-📝)
+
+<!-- /TOC -->
+
+## Usage / Quick Start
 
 Import & initialize:
 
@@ -64,8 +78,50 @@ To serve binary content make sure that you setup the plugin in your serverless.y
           - "image/png"
           - "image/jpeg"
 
-Some additional real-world examples are demonstrated in the [demo](demo/serverless.yml).
+Some additional real-world examples are demonstrated in the [examples](examples/) directory.
 
-# Installation
+## Prerequisites / Usage Requirements
 
-npm: `npm install serverless-aws-static-file-handler --save-prod`
+Requires Node.js latest, LTS, and v10 ([tested](https://travis-ci.org/activescott/serverless-aws-static-file-handler)).
+
+Requires Serverless Framework v1.x.
+If you are new to the Serverless Framework, check out the [Serverless Framework Getting Started Guide](https://serverless.com/framework/docs/getting-started/).
+
+## Install
+
+Install with yarn (`yarn add serverless-aws-static-file-handler`) or npm (`npm install serverless-aws-static-file-handler --save-prod`)
+
+## Features
+
+- Simple to get started
+- Works with **text files** such as HTML or **binary** files such as images or fonts
+
+## Contributing 🤝
+
+This is a community project. We invite your participation through issues and pull requests! You can peruse the [contributing guidelines](.github/CONTRIBUTING.md).
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+## Release Process (Deploying to NPM)
+
+To deploy a **pre-release version** to NPM, tag a commit in master branch with a semver-compatible git tag and **postfixed with** an NPM distribution tag of `next`. For example:
+
+    git tag 1.0.1-next
+
+To deploy a **production** version to NPM, tag a commit in master branch with a semver-compatible git tag **WITHOUT** a NPM distribution tag. For example:
+
+    git tag 1.0.1
+
+In this case, since no NPM distribution tag is provided the `latest` tag will be used making it a normal production release.
+
+NOTE: To get the tag to GitHub push it with `git push --tags`.
+
+NOTE: If you want to move the git tag that was already pushed to the remote (GitHub) to a different commit you must delete it on the remote like `git push --delete origin 0.8.7-next` and then push it with `git push --tags`. Or do the abbreviated from by force-pushing it like `git push --tags -f`.
+
+## License 📝
+
+Copyright © 2017 [scott@willeke.com](https://github.com/activescott).
+
+This project is [MIT](https://github.com/activescott/serverless-http-invoker/blob/master/LICENSE) licensed.

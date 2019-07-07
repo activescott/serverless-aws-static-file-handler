@@ -1,3 +1,4 @@
 test/
 .prettierignore
 yarn.lock
+.nycrc.yaml
