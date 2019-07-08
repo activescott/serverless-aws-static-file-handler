@@ -214,12 +214,18 @@ class StaticFileHandler {
       "isBase64Encoded"
     ]
     const missingProps = expectedProps.filter(propName => !(propName in event))
-    if (missingProps.length > 0)
+    // We're using serverless-offline which doesn't provide the `isBase64Encoded` prop, but does add the isOffline. Fixes issue #10: https://github.com/activescott/serverless-aws-static-file-handler/issues/10
+    const isServerlessOfflineEnvironment =
+      missingProps.length === 1 &&
+      missingProps[0] === "isBase64Encoded" &&
+      "isOffline" in event
+    if (missingProps.length > 0 && !isServerlessOfflineEnvironment) {
       throw new Error(
         `API Gateway method does not appear to be setup for Lambda Proxy Integration. Please confirm that \`integration\` property of the http event is not specified or set to \`integration: proxy\`. Missing lambda proxy property was ${
           missingProps[0]
         }`
       )
+    }
   }
 }
 

@@ -10,7 +10,9 @@
 
   <div id="invalid403" style="border: 1px solid gray">
     These each have a path that does not have a route (<code>http</code> event)
-    setup in serverless.yml. They should all be returning 403:
+    setup in serverless.yml. They should all be returning 403 OR 404 (API
+    Gateway in prod reports them as 403, but serverless-offline reports them as
+    404):
   </div>
 
   <div id="invalid404" style="border: 1px solid gray">

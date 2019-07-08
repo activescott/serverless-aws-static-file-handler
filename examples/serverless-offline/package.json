@@ -1,0 +1,19 @@
+{
+  "name": "static-file-handler-demo-offline",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "destroy": "serverless remove",
+    "lint": "prettier --write \"./**/*.{js,md,yml,json,html}\""
+  },
+  "devDependencies": {
+    "prettier": "^1.15.3",
+    "serverless": "^1.46.1",
+    "serverless-offline": "^5.7.1"
+  },
+  "dependencies": {
+    "serverless-aws-static-file-handler": "^2.0.1"
+  }
+}
