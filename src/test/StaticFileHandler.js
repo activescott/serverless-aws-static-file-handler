@@ -93,6 +93,18 @@ describe("StaticFileHandler", function() {
       )
     })
 
+    it("should succeed in serverless-offline environment", function() {
+      // see issue #10:
+      const event = mockEvent({ path: "README.md" })
+      delete event["isBase64Encoded"]
+      event["isOffline"] = true
+      let h = new StaticFileHandler(STATIC_FILES_PATH)
+      return h.get(event, null).then(response => {
+        let expectedContent = "This directory is not empty. Is it?\n"
+        return expect(response.body).to.equal(expectedContent)
+      })
+    })
+
     it("should return text as text", function() {
       const event = mockEvent({ path: "README.md" })
       let h = new StaticFileHandler(STATIC_FILES_PATH)
