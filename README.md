@@ -78,11 +78,11 @@ To serve binary content make sure that you setup the plugin in your serverless.y
           - "image/png"
           - "image/jpeg"
 
-Some additional real-world examples are demonstrated in the [examples](examples/) directory.
+Some additional real-world examples are demonstrated in the [examples/basic/](examples/basic) directory as well as a [serverless-offline](https://github.com/dherault/serverless-offline)-specific example in [examples/serverless-offline/](examples/serverless-offline).
 
 ## Prerequisites / Usage Requirements
 
-Requires Node.js latest, LTS, and v10 ([tested](https://travis-ci.org/activescott/serverless-aws-static-file-handler)).
+Requires Node.js latest, LTS, or v10 ([tested](https://travis-ci.org/activescott/serverless-aws-static-file-handler)).
 
 Requires Serverless Framework v1.x.
 If you are new to the Serverless Framework, check out the [Serverless Framework Getting Started Guide](https://serverless.com/framework/docs/getting-started/).
