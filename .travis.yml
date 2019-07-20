@@ -3,7 +3,12 @@ node_js:
   - "node"
   - "lts/*"
   - "8"
-
+env:
+  global:
+    # GH_TOKEN (Github for semantic-release)
+    - secure: "kTg1jZf3zf7NvIxF3RwEf1rn7czN7wviLyMvFh1+VLdub6xSeJKJVWOyKYwlkRke3f8LQckjtBw4LD6oyJAPlkm+1E8NAv+sj6wTZ32UwNVaI9mBt+9gfJ4wWVtDgUrl178syph8V/dCUatiMOpXqD7lV1SNRl1tQSdktae6hADwopqrIYzxmudfDnlPRGmz3hTeT+HQXSMwvzOs6gnCg+fyRUX8kys2Fc0M44anqLFJlNAgH6PvwAuWzfmpBWErfTQqJ06kt2wnCFqTvElA+Pjv6eCDigMcaKuXD6gDQAeQCJ3zJ/SCIQrh6zHX9SAEfLxjgv+gu1fIYc+pWC2Wpp/HsaHEunZnEF+3UDsmg6+K77SBPUxtm/66KET6+XAECaO0qs1U4+hm05Fd40GIhZMtq/aFo1Pc71qsoFmcoApX3ojRHUCdC4oYuTBfkMWUUkxTe1pjQrnCw0Sx+u7gwkiKnufWJxSKmp0QFDSsrmVmzqBBfa558vNCf98LAzwSEbqbRh5J7UIYUxVr3ULN2uLmCqL3s6JFZQFVBO2BHtQ4xqfhJWVy0JhcBUmPu6zRAzqT+nSiKecMEhn/cYsJYsFxUQ1GCP/J+9uryEakf2lW2KOME0iyHunG1uJyPky1w1Jz2ShYVBP02xFNAhd7bmXH2by0LDSk49MFpLnikt8="
+    # NPM_TOKEN
+    - secure: "XIlYhrIn5a2nCawky+1Wk1WK1mGlTWZUttVHDQ2H6C9Vf1QdZCZWw3Bvihf+6Rn/naErTyUZneWMyDMt06BckhBzeYEZnyQ7OWjc6S8KFhLIcxtxyBlM5DVCt4QUNMBWs24CjOjiNwlUd40KE+YhfyR6Zvq1arrzCsFHjOvm/us+k0kto2B7VS7oQxVhSO3XEJIc96j4W6D/5BkyUXdwBsVHoulokCmAKgKMWAATkwCqE/l3e1m4ItGvlfkme1Kc89KRQpl9/rCF6IVZa/xbPgLyeL03eYC9DKXN0hboY5oEy6O1jwGnGR1K5az+yqOwrAUY+wrHNTesvabd0Z45hqPOTgLBtfoRxf8jEpIZaXbsYKJ1CklA/wOHwS2eJSSveuv++RN7h2TiJ8QyDoq5y0vm6QVQTy89QTdHR68FlZEe8OP1pBd6rtmPsoYIFjcQZh7hYkLHsomWBYopWTHuxx18SSnVmxZYOkhyNy9I1m7iFLFRgPrRp0+ZOpS5PA7lHwZ9DRekRIvZyh/LXUoA6AqWPShSiXiH8xDkGf/LYP03Np/pHfr5vdUgTBir+1LGEAvl1Z0TBUWlX4DUUiwdcQGM+KZnRYqwKVl7PpU/oV277ajphCMKoC1g3anApQ4bMCn9e52TsPNIVnMcSqDd4iSSJ1s98BHbdXUbJaphDaY="
 cache:
   npm: false # because we're using `npm ci` as install script (but not auto-detected because package-lock.json not in root); https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#npm-ci-support
   directories:
@@ -20,40 +25,20 @@ script:
 
 jobs:
   include:
+    # Define the release stage that runs semantic-release
+    - stage: semantic-release
+      node_js: lts/*
+      # build it so the necessary distributable files exist
+      script: npm build
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script:
+            - ./node_modules/.bin/semantic-release
+          on:
+            # Override `deploy` default of master; semantic-release will decide which branches to deploy on!
+            all_branches: true
     - stage: Report Coverage
       node_js: "node"
       script: echo "Running coverage report ..."
       after_success: npm run coverage # in after_success because we don't wan't to fail the build if this failed.
-    - stage: Deploy NPM
-      node_js: "node"
-      script: echo "Deploying to npm ..." # explicitly having a tag here also prevents default script (i.e. tests for node_js), which have already run in prior stage: https://docs.travis-ci.com/user/build-stages/#build-stages-and-deployments
-      before_deploy: # NOTE: only be triggered if Travis CI is actually deploying; https://docs.travis-ci.com/user/deployment/npm/#running-commands-before-and-after-deploy
-        - |
-          echo "Running npm version --no-git-tag-version $TRAVIS_TAG ..."
-          npm version --no-git-tag-version $TRAVIS_TAG
-      deploy:
-        # production releases
-        - provider: npm
-          email: scott@willeke.com
-          api_key:
-            secure: glWsZuRuVlaYBpGtDJYGeWpABU/In7tesyJvVkbhW1sKhkO510uqrAWfJh0XiLhYMJrS1a2zeCIuBCdJE9cDaKF3zfWQkmMjOdoctAR+X7FoPh/4QP12STbK9x5TNk62b/kjJVCkS0udaOLnSf1LEXLPVqzYEt1OqaWFrFRIFWtiKMaMAMHKCT3qcHjar/TqYecKzxMo1tpSSA4KQ20uYoDnMjGAVhtESegM69e360MVsHYKANN5lJbM9MBap1UihFfMLPBq2rVu7dClkrKW9OKbFD7Zrnn0yX52PGmUm+MzZASZOlyJFs8ssqrMAlrurhoM59264W9qYBPcOH8464aK6AvevoFRSYLORIQ5rlWaLTpIi1eo+S4kzaEhZWSv0nmQhRex+RnpznCfvpG/L0O/2YchiVps3CW5NGJ5dkJIBi8uC+WQ2278hONLgOmVTbpAPrRmfH4+2+BAHYQjOeBmVxbb+mrpT5IQsPpE9Of/Ev/62CeTkTDqOX+EeLc6CsleNRvAqvPdg9UV9s/2wV697L+HA4dOtWf700nQ6ZC3QSWgy38+3S/rj204wk3Osu/GJUh7RTvpNJWCOMnEl1YtndPtrez21Ye4Jj1HGMDI192wKeByeHkbKwISt6iRapQ0uQkCzAvBGXJu3BStLjaqOgt0TWmPGWhHlA00SZg=
-          skip_cleanup: true # because we use npm version in before_deploy to edit the package version
-          tag: latest # latest==production: https://docs.npmjs.com/adding-dist-tags-to-packages
-          on: # https://docs.travis-ci.com/user/deployment#conditional-releases-with-on
-            tags: true
-            repo: activescott/serverless-aws-static-file-handler
-            branch: master
-            # only if the git tag that triggered this build was "vD.D.D" *WITHOUT* an NPM distribution tag postfix like `v1.0.1`
-            condition: '$TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+$'
-        # tagged prereleases
-        - provider: npm
-          email: scott@willeke.com
-          api_key:
-            secure: glWsZuRuVlaYBpGtDJYGeWpABU/In7tesyJvVkbhW1sKhkO510uqrAWfJh0XiLhYMJrS1a2zeCIuBCdJE9cDaKF3zfWQkmMjOdoctAR+X7FoPh/4QP12STbK9x5TNk62b/kjJVCkS0udaOLnSf1LEXLPVqzYEt1OqaWFrFRIFWtiKMaMAMHKCT3qcHjar/TqYecKzxMo1tpSSA4KQ20uYoDnMjGAVhtESegM69e360MVsHYKANN5lJbM9MBap1UihFfMLPBq2rVu7dClkrKW9OKbFD7Zrnn0yX52PGmUm+MzZASZOlyJFs8ssqrMAlrurhoM59264W9qYBPcOH8464aK6AvevoFRSYLORIQ5rlWaLTpIi1eo+S4kzaEhZWSv0nmQhRex+RnpznCfvpG/L0O/2YchiVps3CW5NGJ5dkJIBi8uC+WQ2278hONLgOmVTbpAPrRmfH4+2+BAHYQjOeBmVxbb+mrpT5IQsPpE9Of/Ev/62CeTkTDqOX+EeLc6CsleNRvAqvPdg9UV9s/2wV697L+HA4dOtWf700nQ6ZC3QSWgy38+3S/rj204wk3Osu/GJUh7RTvpNJWCOMnEl1YtndPtrez21Ye4Jj1HGMDI192wKeByeHkbKwISt6iRapQ0uQkCzAvBGXJu3BStLjaqOgt0TWmPGWhHlA00SZg=
-          skip_cleanup: true # because we use npm version in before_deploy to edit the package version
-          tag: next
-          on: # https://docs.travis-ci.com/user/deployment#conditional-releases-with-on
-            tags: true
-            repo: activescott/serverless-aws-static-file-handler
-            # only if the git tag that triggered this build was "vD.D.D" *WITH* an NPM distribution tag postfix of `next` like `v1.0.1-next`
-            condition: '$TRAVIS_TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-next)$'
