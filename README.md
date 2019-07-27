@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/activescott/serverless-aws-static-file-handler.svg)](https://travis-ci.org/activescott/serverless-aws-static-file-handler)
 [![Coverage Status](https://coveralls.io/repos/github/activescott/serverless-aws-static-file-handler/badge.svg)](https://coveralls.io/github/activescott/serverless-aws-static-file-handler)
 [![License](https://img.shields.io/github/license/activescott/serverless-aws-static-file-handler.svg)](https://github.com/activescott/serverless-aws-static-file-handler/blob/master/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/activescott/serverless-aws-static-file-handler.svg?style=social)](https://github.com/activescott/serverless-aws-static-file-handler)
+[![GitHub stars](https://img.shields.io/github/stars/activescott/serverless-aws-static-file-handler.svg?style=social)](https://github.com/activescott/serverless-aws-static-file-handler) [![Greenkeeper badge](https://badges.greenkeeper.io/activescott/serverless-aws-static-file-handler.svg)](https://greenkeeper.io/)
 
 # serverless-aws-static-file-handler
 
