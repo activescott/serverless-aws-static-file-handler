@@ -54,7 +54,7 @@
     "test": "nyc ./node_modules/.bin/mocha './src/test/*.js'",
     "lint": "prettier -l \"**/*.{js,md,yml,json,html}\"",
     "lint-fix": "prettier --write \"**/*.{js,md,yml,yaml,json,html}\"",
-    "coverage": "npm run test && nyc report --reporter=text-lcov | coveralls"
+    "coverage-publish": "cat ./coverage/lcov.info | coveralls"
   },
   "license": "MIT"
 }
