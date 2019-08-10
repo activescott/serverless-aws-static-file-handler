@@ -14,14 +14,16 @@ cache:
   directories:
     - $HOME/.npm # https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#npm-ci-support
 
-# Do these run for all jobs/stages?
-before_install: cd ./src
+# NOTE: this is basically the first "stage" with the name "Test"
 install: npm ci # https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#npm-ci-support
 
 script:
   - echo "Running tests against $(node -v) ..."
   - npm run lint
   - npm run test
+
+after_success:
+  - test "$TRAVIS_NODE_VERSION" = "lts/*" && npm run coverage-publish
 
 jobs:
   include:
@@ -38,7 +40,3 @@ jobs:
           on:
             # Override `deploy` default of master; semantic-release will decide which branches to deploy on!
             all_branches: true
-    - stage: Report Coverage
-      node_js: "node"
-      script: echo "Running coverage report ..."
-      after_success: npm run coverage # in after_success because we don't wan't to fail the build if this failed.

@@ -3,7 +3,7 @@
   "description": "Easily serve static files with the Serverless Framework on AWS Lambda.",
   "homepage": "https://github.com/activescott/serverless-aws-static-file-handler#readme",
   "version": "0.0.0",
-  "main": "StaticFileHandler.js",
+  "main": "src/StaticFileHandler.js",
   "author": {
     "name": "Scott Willeke",
     "email": "scott@willeke.com",
@@ -46,17 +46,15 @@
     "node": ">=8"
   },
   "files": [
-    "error.html",
-    "plugins/BinaryMediaTypes.js",
-    "StaticFileHandler.js"
+    "src/error.html",
+    "src/plugins/BinaryMediaTypes.js",
+    "src/StaticFileHandler.js"
   ],
   "scripts": {
-    "test": "nyc --cwd ./ ./node_modules/.bin/mocha",
-    "lint": "prettier -l \"../**/*.{js,md,yml,json,html}\"",
-    "lint-fix": "prettier --write \"../**/*.{js,md,yml,yaml,json,html}\"",
-    "coverage": "npm run test && nyc report --reporter=text-lcov | coveralls",
-    "prepack": "cp ../README.md ./ ; cp ../LICENSE ./",
-    "postpack": "rm -f ./README.md ./LICENSE"
+    "test": "nyc ./node_modules/.bin/mocha './src/test/*.js'",
+    "lint": "prettier -l \"**/*.{js,md,yml,json,html}\"",
+    "lint-fix": "prettier --write \"**/*.{js,md,yml,yaml,json,html}\"",
+    "coverage-publish": "cat ./coverage/lcov.info | coveralls"
   },
   "license": "MIT"
 }

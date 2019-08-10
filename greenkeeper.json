@@ -4,7 +4,7 @@
       "packages": [
         "examples/basic/package.json",
         "examples/serverless-offline/package.json",
-        "src/package.json"
+        "package.json"
       ]
     }
   }
