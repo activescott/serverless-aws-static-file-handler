@@ -60,6 +60,7 @@ typings/
 examples/basic/.serverless
 
 .vscode/
+.idea/
 
 /junk.js
 /todo.md

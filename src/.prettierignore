@@ -1,5 +1,0 @@
-../.vscode/
-../examples/basic/.serverless/
-.nyc_output/
-coverage/
-node_modules/
