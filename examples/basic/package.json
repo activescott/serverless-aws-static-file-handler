@@ -9,7 +9,7 @@
     "lint": "prettier --write \"./**/*.{js,md,yml,json,html}\""
   },
   "devDependencies": {
-    "prettier": "^1.15.3",
+    "prettier": "^1.19.1",
     "serverless": "^1.46.1"
   },
   "dependencies": {
