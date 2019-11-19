@@ -11,3 +11,4 @@ exclude:
   - src/test/
   - coverage/
   - examples/
+  - release.config.js

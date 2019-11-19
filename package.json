@@ -52,6 +52,7 @@
   ],
   "scripts": {
     "test": "nyc ./node_modules/.bin/mocha './src/test/*.js'",
+    "pretest": "npm run lint",
     "lint": "prettier -l \"**/*.{js,md,yml,json,html}\"",
     "lint-fix": "prettier --write \"**/*.{js,md,yml,yaml,json,html}\"",
     "coverage-publish": "cat ./coverage/lcov.info | coveralls"
