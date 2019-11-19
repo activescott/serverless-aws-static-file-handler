@@ -221,9 +221,7 @@ class StaticFileHandler {
       "isOffline" in event
     if (missingProps.length > 0 && !isServerlessOfflineEnvironment) {
       throw new Error(
-        `API Gateway method does not appear to be setup for Lambda Proxy Integration. Please confirm that \`integration\` property of the http event is not specified or set to \`integration: proxy\`. Missing lambda proxy property was ${
-          missingProps[0]
-        }`
+        `API Gateway method does not appear to be setup for Lambda Proxy Integration. Please confirm that \`integration\` property of the http event is not specified or set to \`integration: proxy\`. Missing lambda proxy property was ${missingProps[0]}`
       )
     }
   }
