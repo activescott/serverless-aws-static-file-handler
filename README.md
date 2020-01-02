@@ -71,7 +71,7 @@ In your `serverless.yml` file, reference the handler function from above to prov
 To serve binary content make sure that you setup the plugin in your serverless.yml like so:
 
     plugins:
-      - serverless-aws-static-file-handler/plugins/BinaryMediaTypes
+      - serverless-aws-static-file-handler/src/plugins/BinaryMediaTypes
 
     custom:
       apiGateway:
