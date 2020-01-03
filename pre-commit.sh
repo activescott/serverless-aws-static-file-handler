@@ -10,5 +10,5 @@ die () {
 
 pushd .
 cd src
-yarn run lint || die $?
-yarn run test || die $?
+npm run lint || die $?
+npm run test || die $?

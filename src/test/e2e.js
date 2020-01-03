@@ -28,8 +28,10 @@ function loadServerless(projectDir) {
   })
   if (npmProc.status !== 0) {
     console.error(
-      "npm install failed for project '" + projectDir + "':",
-      npmProc.stdout.toString()
+      "npm install failed for project '" + projectDir + "'.\nsdtout:",
+      npmProc.stdout.toString(),
+      "\n stderr:",
+      npmProc.stderr.toString()
     )
     return npmProc
   }
