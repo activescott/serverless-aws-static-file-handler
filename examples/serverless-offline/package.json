@@ -1,5 +1,6 @@
 {
   "name": "static-file-handler-demo-offline",
+  "private": true,
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -14,6 +15,6 @@
     "serverless-offline": "^5.7.1"
   },
   "dependencies": {
-    "serverless-aws-static-file-handler": "^2.0.1"
+    "serverless-aws-static-file-handler": ">2.0.0"
   }
 }

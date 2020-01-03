@@ -64,3 +64,5 @@ examples/basic/.serverless
 
 /junk.js
 /todo.md
+
+.serverless/

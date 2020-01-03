@@ -12,3 +12,4 @@ exclude:
   - coverage/
   - examples/
   - release.config.js
+  - test-files/
