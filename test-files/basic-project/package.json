@@ -1,6 +1,5 @@
 {
   "name": "static-file-handler-demo-proxy",
-  "private": true,
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -14,6 +13,6 @@
     "serverless": "^1.46.1"
   },
   "dependencies": {
-    "serverless-aws-static-file-handler": ">2.0.0"
+    "serverless-aws-static-file-handler": "file:../../serverless-aws-static-file-handler-0.0.0.tgz"
   }
 }

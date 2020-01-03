@@ -14,6 +14,18 @@ describe("BinaryMediaTypes", function() {
     sinon.restore()
   })
 
+  describe("source path", function() {
+    it("should load from '/plugins/BinaryMediaTypes'", () => {
+      // this is the proper path
+      require("../../plugins/BinaryMediaTypes")
+    })
+
+    it("should load from 'src/plugins/BinaryMediaTypes'", () => {
+      // this was inadvertently introduced in v2.0.3 per https://github.com/activescott/serverless-aws-static-file-handler/issues/32
+      require("../plugins/BinaryMediaTypes")
+    })
+  })
+
   describe("constructor", function() {
     it("should not allow empty serverless arg", function() {
       expect(() => new BinaryMediaTypes()).to.throw(
