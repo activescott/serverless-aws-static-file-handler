@@ -35,12 +35,12 @@
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.2",
     "js-yaml": "^3.13.1",
-    "mocha": "^6.1.4",
+    "mocha": "^7.0.1",
     "nyc": "^15.0.0",
     "prettier": "^1.19.1",
     "semantic-release": ">=16.0.0-beta",
     "serverless": "^1.60.5",
-    "sinon": "^8.0.0"
+    "sinon": "^9.0.0"
   },
   "engines": {
     "node": ">=8"
