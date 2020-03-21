@@ -37,7 +37,7 @@
     "js-yaml": "^3.13.1",
     "mocha": "^7.0.1",
     "nyc": "^15.0.0",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.0",
     "semantic-release": ">=16.0.0-beta",
     "serverless": "^1.60.5",
     "sinon": "^9.0.0"
