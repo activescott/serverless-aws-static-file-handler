@@ -12,7 +12,7 @@
   "devDependencies": {
     "prettier": "^1.19.1",
     "serverless": "^1.46.1",
-    "serverless-offline": "^5.7.1"
+    "serverless-offline": "^6.1.2"
   },
   "dependencies": {
     "serverless-aws-static-file-handler": ">2.0.0"
