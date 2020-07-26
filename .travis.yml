@@ -19,7 +19,7 @@ install: npm ci # https://docs.travis-ci.com/user/languages/javascript-with-node
 
 script:
   - echo "Running tests against $(node -v) ..."
-  - npm run lint
+  - "[[ $(node -v) != v8* ]] && npm run lint"
   - npm run test
 
 after_success:
