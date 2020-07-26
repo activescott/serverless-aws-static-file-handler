@@ -12,11 +12,11 @@ class BinaryMediaTypes {
     this.provider = this.serverless.getProvider("aws")
     this.commands = {
       deploy: {
-        lifecycleEvents: ["resources"]
-      }
+        lifecycleEvents: ["resources"],
+      },
     }
     this.hooks = {
-      "package:compileEvents": this.packageCompileEvents.bind(this)
+      "package:compileEvents": this.packageCompileEvents.bind(this),
     }
   }
 
@@ -29,7 +29,7 @@ class BinaryMediaTypes {
   getRestApi() {
     const resources = this.serverless.service.provider
       .compiledCloudFormationTemplate.Resources
-    return _.find(resources, r => r.Type === "AWS::ApiGateway::RestApi")
+    return _.find(resources, (r) => r.Type === "AWS::ApiGateway::RestApi")
   }
 
   readConfig() {
@@ -72,7 +72,7 @@ class BinaryMediaTypes {
 
 BinaryMediaTypes.Strings = {
   CONFIG_ERROR:
-    "No BinaryMediaTypes configured. See https://github.com/activescott/serverless-aws-static-file-handler#usage for information on how to configure"
+    "No BinaryMediaTypes configured. See https://github.com/activescott/serverless-aws-static-file-handler#usage for information on how to configure",
 }
 
 module.exports = BinaryMediaTypes

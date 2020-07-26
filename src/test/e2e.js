@@ -7,11 +7,11 @@ const expect = chai.expect
 const path = require("path")
 const { spawnSync } = require("child_process")
 
-describe("e2e", function() {
+describe("e2e", function () {
   // npm install & serverless loading a project is pretty slow (apparently damn slow on node8: https://travis-ci.org/activescott/serverless-aws-static-file-handler/jobs/632405805?utm_medium=notification&utm_source=github_status)
   this.timeout(25000)
 
-  it("should load plugin", function() {
+  it("should load plugin", function () {
     // does a simple load of a plugin per https://github.com/activescott/serverless-aws-static-file-handler/issues/32
     const proc = loadServerless("../../test-files/basic-project")
     expect(proc).to.haveOwnProperty("status", 0)
@@ -24,7 +24,7 @@ function loadServerless(projectDir) {
   // first run npm install
   console.log("Running npm install for project at '" + projectDir + "'...")
   const npmProc = spawnSync("npm", ["install"], {
-    cwd: cwd
+    cwd: cwd,
   })
   if (npmProc.status !== 0) {
     console.error(
@@ -39,7 +39,7 @@ function loadServerless(projectDir) {
     "Running npm install for project at '" + projectDir + "' complete."
   )
   const slsProc = spawnSync("./node_modules/.bin/serverless", ["print"], {
-    cwd: cwd
+    cwd: cwd,
   })
   if (slsProc.status !== 0) {
     console.error("proc.stdout", slsProc.stdout.toString())

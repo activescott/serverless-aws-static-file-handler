@@ -47,10 +47,10 @@ class StaticFileHandler {
       "Big5",
       "ISO-8859-15",
       "Windows-1256",
-      "ISO-8859-9"
+      "ISO-8859-9",
     ]
     const found = textualCharSets.find(
-      cs => 0 === cs.localeCompare(mimeCharset, "en", { sensitivity: "base" })
+      (cs) => 0 === cs.localeCompare(mimeCharset, "en", { sensitivity: "base" })
     )
     return found === undefined || found === null
   }
@@ -94,7 +94,7 @@ class StaticFileHandler {
       requestPath = event.path
     }
     let filePath = path.join(this.clientFilesPath, requestPath)
-    return this.readFileAsResponse(filePath, context).catch(err => {
+    return this.readFileAsResponse(filePath, context).catch((err) => {
       throw new Error(
         `Unable to read client file '${requestPath}'. Error: ${err}`
       )
@@ -161,10 +161,10 @@ class StaticFileHandler {
     const response = {
       statusCode: statusCode,
       headers: {
-        "Content-Type": mimeType
+        "Content-Type": mimeType,
       },
       isBase64Encoded,
-      body: stringData
+      body: stringData,
     }
     return response
   }
@@ -189,7 +189,7 @@ class StaticFileHandler {
       filePath = path.join(__dirname, "error.html")
     }
     const viewData = {
-      errorText: errorText
+      errorText: errorText,
     }
     return this.readFileAsResponse(filePath, viewData, statusCode)
   }
@@ -211,9 +211,11 @@ class StaticFileHandler {
       "stageVariables",
       "requestContext",
       "body",
-      "isBase64Encoded"
+      "isBase64Encoded",
     ]
-    const missingProps = expectedProps.filter(propName => !(propName in event))
+    const missingProps = expectedProps.filter(
+      (propName) => !(propName in event)
+    )
     // We're using serverless-offline which doesn't provide the `isBase64Encoded` prop, but does add the isOffline. Fixes issue #10: https://github.com/activescott/serverless-aws-static-file-handler/issues/10
     const isServerlessOfflineEnvironment =
       missingProps.length === 1 &&

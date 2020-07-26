@@ -25,28 +25,28 @@ function mockEvent(event) {
     requestContext: {},
     body: null,
     isBase64Encoded: false,
-    ...event
+    ...event,
   }
 }
 
-describe("StaticFileHandler", function() {
-  describe("constructor", function() {
-    it("should not allow empty arg", function() {
+describe("StaticFileHandler", function () {
+  describe("constructor", function () {
+    it("should not allow empty arg", function () {
       expect(() => new StaticFileHandler()).to.throw(
         /^clientFilesPath must be specified$/
       )
     })
 
-    it("should accept string arg", function() {
+    it("should accept string arg", function () {
       expect(() => new StaticFileHandler("some/path")).to.not.throw(Error)
     })
   })
 
-  describe("get", function() {
-    it("should return index.html", function() {
+  describe("get", function () {
+    it("should return index.html", function () {
       const event = mockEvent({ path: "index.html" })
       let h = new StaticFileHandler(STATIC_FILES_PATH)
-      return h.get(event, null).then(response => {
+      return h.get(event, null).then((response) => {
         expect(response).to.have.property("statusCode", 200)
         expect(response)
           .to.have.property("body")
@@ -55,7 +55,7 @@ describe("StaticFileHandler", function() {
       })
     })
 
-    it("should validate event exist", function() {
+    it("should validate event exist", function () {
       const event = null
       let h = new StaticFileHandler(STATIC_FILES_PATH)
       return expect(h.get(event, null)).to.be.rejectedWith(
@@ -63,29 +63,29 @@ describe("StaticFileHandler", function() {
       )
     })
 
-    it("should validate event.path", function() {
+    it("should validate event.path", function () {
       const event = mockEvent({ NOPATH: "index.html" })
       let h = new StaticFileHandler(STATIC_FILES_PATH)
       return expect(h.get(event, null)).to.be.rejectedWith(/Empty path.$/)
     })
 
-    it.skip("(integration:lambda no longer supported) should work with non-lambdaproxy requests", function() {
+    it.skip("(integration:lambda no longer supported) should work with non-lambdaproxy requests", function () {
       const event = {
         path: {
-          fonts: "fonts/glyphicons-halflings-regular.woff2"
-        }
+          fonts: "fonts/glyphicons-halflings-regular.woff2",
+        },
       }
       let h = new StaticFileHandler(STATIC_FILES_PATH)
-      return h.get(event, null).then(response => {
+      return h.get(event, null).then((response) => {
         return expect(response.body.length).to.equal(24040)
       })
     })
 
-    it("integration:lambda no longer supported; should fail if not using lambda-proxy", function() {
+    it("integration:lambda no longer supported; should fail if not using lambda-proxy", function () {
       const event = {
         path: {
-          fonts: "fonts/glyphicons-halflings-regular.woff2"
-        }
+          fonts: "fonts/glyphicons-halflings-regular.woff2",
+        },
       }
       let h = new StaticFileHandler(STATIC_FILES_PATH)
       return expect(h.get(event, null)).to.be.rejectedWith(
@@ -93,45 +93,45 @@ describe("StaticFileHandler", function() {
       )
     })
 
-    it("should succeed in serverless-offline environment", function() {
+    it("should succeed in serverless-offline environment", function () {
       // see issue #10:
       const event = mockEvent({ path: "README.md" })
       delete event["isBase64Encoded"]
       event["isOffline"] = true
       let h = new StaticFileHandler(STATIC_FILES_PATH)
-      return h.get(event, null).then(response => {
+      return h.get(event, null).then((response) => {
         let expectedContent = "This directory is not empty. Is it?\n"
         return expect(response.body).to.equal(expectedContent)
       })
     })
 
-    it("should return text as text", function() {
+    it("should return text as text", function () {
       const event = mockEvent({ path: "README.md" })
       let h = new StaticFileHandler(STATIC_FILES_PATH)
-      return h.get(event, null).then(response => {
+      return h.get(event, null).then((response) => {
         let expectedContent = "This directory is not empty. Is it?\n"
         return expect(response.body).to.equal(expectedContent)
       })
     })
 
-    it("should insert viewdata", function() {
+    it("should insert viewdata", function () {
       const event = mockEvent({ path: "index.html" })
       let h = new StaticFileHandler(STATIC_FILES_PATH)
       const context = {
         staticFileHandler: {
           viewData: {
-            csrftoken: "MY_FAKE_CSRF_TOKEN"
-          }
-        }
+            csrftoken: "MY_FAKE_CSRF_TOKEN",
+          },
+        },
       }
-      return h.get(event, context).then(response => {
+      return h.get(event, context).then((response) => {
         return expect(response.body).to.match(
           /.*<input id="csrftoken" type="hidden" value="MY_FAKE_CSRF_TOKEN"/
         )
       })
     })
 
-    it("should return 404 when no path parameters", function() {
+    it("should return 404 when no path parameters", function () {
       const event = mockEvent({ path: "doesntexist.404" })
       let h = new StaticFileHandler(STATIC_FILES_PATH)
       const response = h.get(event, null)
@@ -140,7 +140,7 @@ describe("StaticFileHandler", function() {
         .that.equals(404)
     })
 
-    it("should return 404 customErrorPagePath is invalid", function() {
+    it("should return 404 customErrorPagePath is invalid", function () {
       const event = mockEvent({ path: "doesntexist.404" })
       let h = new StaticFileHandler(
         STATIC_FILES_PATH,
@@ -152,7 +152,7 @@ describe("StaticFileHandler", function() {
         .that.equals(404)
     })
 
-    it("should use customErrorPagePath", async function() {
+    it("should use customErrorPagePath", async function () {
       const event = mockEvent({ path: "doesntexist.404" })
       let h = new StaticFileHandler(STATIC_FILES_PATH, "custom-error.html")
       const response = h.get(event, null)
@@ -172,10 +172,10 @@ describe("StaticFileHandler", function() {
      *     path: /binary/{pathvar+}
      * ```
      */
-    it("should support path parameters", function() {
+    it("should support path parameters", function () {
       const event = mockEvent({
         path: "/binary/vendor/output.css.map",
-        pathParameters: { pathvar: "vendor/output.css.map" }
+        pathParameters: { pathvar: "vendor/output.css.map" },
       })
       let h = new StaticFileHandler(STATIC_FILES_PATH)
       const response = h.get(event, null)
@@ -188,10 +188,10 @@ describe("StaticFileHandler", function() {
         .and.has.length(107)
     })
 
-    it("should return 404 with path parameters", function() {
+    it("should return 404 with path parameters", function () {
       const event = mockEvent({
         path: "/binary/does-not-exist.file",
-        pathParameters: { pathvar: "vendor/does-not-exist.file" }
+        pathParameters: { pathvar: "vendor/does-not-exist.file" },
       })
       let h = new StaticFileHandler(STATIC_FILES_PATH)
       const response = h.get(event, null)
@@ -213,14 +213,14 @@ describe("StaticFileHandler", function() {
      *         integration: lambda
      *         contentHandling: CONVERT_TO_BINARY
      */
-    it.skip("(integration:lambda no longer supported) should error on lambda integration without path parameters", function() {
+    it.skip("(integration:lambda no longer supported) should error on lambda integration without path parameters", function () {
       const event = {
         body: {},
         method: "GET",
         stage: "dev",
         headers: { Accept: "*/*" },
         query: {},
-        path: {} // <<< this is the critical input to this test. It is an object (indicating lambda integration), but no properties.
+        path: {}, // <<< this is the critical input to this test. It is an object (indicating lambda integration), but no properties.
       }
       const context = {}
       const h = new StaticFileHandler(STATIC_FILES_PATH)
@@ -229,122 +229,94 @@ describe("StaticFileHandler", function() {
       )
     })
 
-    describe("MIME Types", function() {
-      it("js.map => application/json", async function() {
+    describe("MIME Types", function () {
+      it("js.map => application/json", async function () {
         const event = mockEvent({ path: "vendor/output.js.map" })
         let h = new StaticFileHandler(STATIC_FILES_PATH)
         const response = await h.get(event, null)
-        expect(response)
-          .to.haveOwnProperty("statusCode")
-          .that.equals(200)
+        expect(response).to.haveOwnProperty("statusCode").that.equals(200)
         expect(response)
           .to.have.property("headers")
           .that.has.property("Content-Type")
           .that.equals("application/json")
-        expect(response)
-          .to.have.property("isBase64Encoded")
-          .that.equals(false)
+        expect(response).to.have.property("isBase64Encoded").that.equals(false)
         return response
       })
 
-      it("css.map => application/json", async function() {
+      it("css.map => application/json", async function () {
         const event = mockEvent({ path: "vendor/output.css.map" })
         let h = new StaticFileHandler(STATIC_FILES_PATH)
         const response = await h.get(event, null)
-        expect(response)
-          .to.haveOwnProperty("statusCode")
-          .that.equals(200)
+        expect(response).to.haveOwnProperty("statusCode").that.equals(200)
         expect(response)
           .to.have.property("headers")
           .that.has.property("Content-Type")
           .that.equals("application/json")
-        expect(response)
-          .to.have.property("isBase64Encoded")
-          .that.equals(false)
+        expect(response).to.have.property("isBase64Encoded").that.equals(false)
         return response
       })
 
-      it("unknown-mime-type => application/octet-stream", async function() {
+      it("unknown-mime-type => application/octet-stream", async function () {
         const event = mockEvent({ path: "unknown-mime-type.unknowntype" })
         let h = new StaticFileHandler(STATIC_FILES_PATH)
         const response = await h.get(event, null)
-        expect(response)
-          .to.haveOwnProperty("statusCode")
-          .that.equals(200)
+        expect(response).to.haveOwnProperty("statusCode").that.equals(200)
         expect(response)
           .to.have.property("headers")
           .that.has.property("Content-Type")
           .that.equals("application/octet-stream")
-        expect(response)
-          .to.have.property("isBase64Encoded")
-          .that.equals(true)
+        expect(response).to.have.property("isBase64Encoded").that.equals(true)
         return response
       })
 
-      describe("Binary types are also base64", async function() {
-        it(".png => image/png", async function() {
+      describe("Binary types are also base64", async function () {
+        it(".png => image/png", async function () {
           const event = mockEvent({ path: "png.png" })
           let h = new StaticFileHandler(STATIC_FILES_PATH)
           const response = await h.get(event, null)
-          expect(response)
-            .to.haveOwnProperty("statusCode")
-            .that.equals(200)
+          expect(response).to.haveOwnProperty("statusCode").that.equals(200)
           expect(response).to.have.property("headers")
           expect(response.headers)
             .to.have.property("Content-Type")
             .that.equals("image/png")
-          expect(response)
-            .to.have.property("isBase64Encoded")
-            .that.equals(true)
+          expect(response).to.have.property("isBase64Encoded").that.equals(true)
           return response
         })
 
-        it(".jpg => image/jpeg", async function() {
+        it(".jpg => image/jpeg", async function () {
           const event = mockEvent({ path: "jpg.jpg" })
           let h = new StaticFileHandler(STATIC_FILES_PATH)
           const response = await h.get(event, null)
-          expect(response)
-            .to.haveOwnProperty("statusCode")
-            .that.equals(200)
+          expect(response).to.haveOwnProperty("statusCode").that.equals(200)
           expect(response).to.have.property("headers")
           expect(response.headers)
             .to.have.property("Content-Type")
             .that.equals("image/jpeg")
-          expect(response)
-            .to.have.property("isBase64Encoded")
-            .that.equals(true)
+          expect(response).to.have.property("isBase64Encoded").that.equals(true)
           return response
         })
 
-        it(".woff2 => font/woff2", async function() {
+        it(".woff2 => font/woff2", async function () {
           const event = mockEvent({
-            path: "fonts/glyphicons-halflings-regular.woff2"
+            path: "fonts/glyphicons-halflings-regular.woff2",
           })
           let h = new StaticFileHandler(STATIC_FILES_PATH)
           const response = await h.get(event, null)
-          expect(response)
-            .to.haveOwnProperty("statusCode")
-            .that.equals(200)
+          expect(response).to.haveOwnProperty("statusCode").that.equals(200)
           expect(response).to.have.property("headers")
           expect(response.headers)
             .to.have.property("Content-Type")
             .that.equals("font/woff2")
-          expect(response)
-            .to.have.property("isBase64Encoded")
-            .that.equals(true)
+          expect(response).to.have.property("isBase64Encoded").that.equals(true)
           return response
         })
 
-        it(".bin", async function() {
+        it(".bin", async function () {
           const event = mockEvent({ path: "blah.bin" })
           let h = new StaticFileHandler(STATIC_FILES_PATH)
           const response = await h.get(event, null)
-          expect(response)
-            .to.haveOwnProperty("statusCode")
-            .that.equals(200)
-          expect(response)
-            .to.have.property("isBase64Encoded")
-            .that.equals(true)
+          expect(response).to.haveOwnProperty("statusCode").that.equals(200)
+          expect(response).to.have.property("isBase64Encoded").that.equals(true)
           return response
         })
       })
