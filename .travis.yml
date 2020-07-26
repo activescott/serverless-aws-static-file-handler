@@ -18,7 +18,7 @@ cache:
 install: npm ci # https://docs.travis-ci.com/user/languages/javascript-with-nodejs/#npm-ci-support
 
 script:
-  - echo "Running tests against $(node -v) ..."
+  - echo "Running tests against $(node -v). TRAVIS_NODE_VERSION=${TRAVIS_NODE_VERSION}..."
   - npm run lint
   - npm run test
 

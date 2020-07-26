@@ -8,13 +8,13 @@ const sinon = require("sinon")
 
 const BinaryMediaTypes = require("../plugins/BinaryMediaTypes")
 
-describe("BinaryMediaTypes", function() {
+describe("BinaryMediaTypes", function () {
   afterEach(() => {
     // Restore the default sandbox here
     sinon.restore()
   })
 
-  describe("source path", function() {
+  describe("source path", function () {
     it("should load from '/plugins/BinaryMediaTypes'", () => {
       // this is the proper path
       require("../../plugins/BinaryMediaTypes")
@@ -26,15 +26,15 @@ describe("BinaryMediaTypes", function() {
     })
   })
 
-  describe("constructor", function() {
-    it("should not allow empty serverless arg", function() {
+  describe("constructor", function () {
+    it("should not allow empty serverless arg", function () {
       expect(() => new BinaryMediaTypes()).to.throw(
         /Expected serverless to be provided as argument/
       )
     })
   })
 
-  describe("package:compileEvents", function() {
+  describe("package:compileEvents", function () {
     let logSpy
     beforeEach(() => {
       //logSpy = sinon.spy(console.log)
@@ -44,20 +44,20 @@ describe("BinaryMediaTypes", function() {
     function createPlugin(restApi) {
       const provider = {
         compiledCloudFormationTemplate: {
-          Resources: []
-        }
+          Resources: [],
+        },
       }
       provider.compiledCloudFormationTemplate.Resources.push(restApi)
       const serverless = {
-        getProvider: str => {
+        getProvider: (str) => {
           str === "aws" ? provider : null
         },
         cli: {
-          log: logSpy
+          log: logSpy,
         },
         service: {
-          provider
-        }
+          provider,
+        },
       }
       return new BinaryMediaTypes(serverless)
     }
@@ -65,13 +65,13 @@ describe("BinaryMediaTypes", function() {
     function createRestApi() {
       return {
         Type: "AWS::ApiGateway::RestApi",
-        Properties: []
+        Properties: [],
       }
     }
 
-    const getHook = plugin => plugin.hooks["package:compileEvents"]
+    const getHook = (plugin) => plugin.hooks["package:compileEvents"]
 
-    it("should gracefully fail with logging when no RestApi", function() {
+    it("should gracefully fail with logging when no RestApi", function () {
       const api = createRestApi()
       const p = createPlugin(api)
       // remove Rest API from service (maybe user isn't using http events/APIG?):
@@ -88,7 +88,7 @@ describe("BinaryMediaTypes", function() {
       ).to.be.true
     })
 
-    it("should ungracefully fail when RestApi has no Properties property", function() {
+    it("should ungracefully fail when RestApi has no Properties property", function () {
       const api = createRestApi()
       delete api.Properties
       const p = createPlugin(api)
@@ -96,7 +96,7 @@ describe("BinaryMediaTypes", function() {
       expect(hook).to.throw(/RestApi Properties property does not exist/)
     })
 
-    describe("service configuration", function() {
+    describe("service configuration", function () {
       /**
        * expecting serverless.yml yaml:
        * custom:
@@ -108,7 +108,7 @@ describe("BinaryMediaTypes", function() {
        * Plugin is expecting to read this like: expecting:  serverless.service.custom.apiGateway.binaryMediatypes: []
        */
       const CONFIG_ERROR_REGEX = /github\.com\/activescott\/serverless\-aws\-static\-file\-handler\#usage for information on how to configure$/
-      it("should throw helpful messages when no custom config", function() {
+      it("should throw helpful messages when no custom config", function () {
         const api = createRestApi()
         const p = createPlugin(api)
         p.serverless.service.custom = null
@@ -116,7 +116,7 @@ describe("BinaryMediaTypes", function() {
         expect(hook).to.throw(CONFIG_ERROR_REGEX)
       })
 
-      it("should throw helpful messages when no apiGateway config", function() {
+      it("should throw helpful messages when no apiGateway config", function () {
         const api = createRestApi()
         const p = createPlugin(api)
         p.serverless.service.custom = {}
@@ -124,82 +124,82 @@ describe("BinaryMediaTypes", function() {
         expect(hook).to.throw(CONFIG_ERROR_REGEX)
       })
 
-      it("should throw helpful messages when no binaryMediatypes config", function() {
+      it("should throw helpful messages when no binaryMediatypes config", function () {
         const api = createRestApi()
         const p = createPlugin(api)
         p.serverless.service.custom = {
-          apiGateway: {}
+          apiGateway: {},
         }
         const hook = getHook(p)
         expect(hook).to.throw(CONFIG_ERROR_REGEX)
       })
 
-      it("should throw helpful messages when binaryMediatypes config null", function() {
+      it("should throw helpful messages when binaryMediatypes config null", function () {
         const api = createRestApi()
         const p = createPlugin(api)
         p.serverless.service.custom = {
           apiGateway: {
-            binaryMediaTypes: null
-          }
+            binaryMediaTypes: null,
+          },
         }
         const hook = getHook(p)
         expect(hook).to.throw(CONFIG_ERROR_REGEX)
       })
 
-      it("should throw helpful messages when binaryMediatypes config empty", function() {
+      it("should throw helpful messages when binaryMediatypes config empty", function () {
         const api = createRestApi()
         const p = createPlugin(api)
         p.serverless.service.custom = {
           apiGateway: {
-            binaryMediaTypes: []
-          }
+            binaryMediaTypes: [],
+          },
         }
         const hook = getHook(p)
         expect(hook).to.throw(CONFIG_ERROR_REGEX)
       })
 
-      it("should read configured media types", function() {
+      it("should read configured media types", function () {
         const api = createRestApi()
         const p = createPlugin(api)
         p.serverless.service.custom = {
           apiGateway: {
-            binaryMediaTypes: ["image/png", "image/jpeg"]
-          }
+            binaryMediaTypes: ["image/png", "image/jpeg"],
+          },
         }
         const hook = getHook(p)
         hook()
         expect(api.Properties.BinaryMediaTypes).to.deep.equal([
           "image/png",
-          "image/jpeg"
+          "image/jpeg",
         ])
       })
     })
 
-    it("should not overwrite any existing media types in stack", function() {
+    it("should not overwrite any existing media types in stack", function () {
       const api = createRestApi()
       api.Properties.BinaryMediaTypes = ["image/jpeg"]
       const p = createPlugin(api)
       p.serverless.service.custom = {
         apiGateway: {
-          binaryMediaTypes: ["image/png"]
-        }
+          binaryMediaTypes: ["image/png"],
+        },
       }
       const hook = getHook(p)
       hook()
       expect(api.Properties.BinaryMediaTypes).to.deep.equal([
         "image/jpeg",
-        "image/png"
+        "image/png",
       ])
     })
 
-    it("should not add duplicates to existing media types in stack", function() {
+    it("should not add duplicates to existing media types in stack", function () {
       const api = createRestApi()
       api.Properties = ["image/jpeg"]
       const p = createPlugin(api)
       p.serverless.service.custom = {
         apiGateway: {
-          binaryMediaTypes: ["image/jpeg"]
-        }
+          binaryMediaTypes: ["image/jpeg"],
+        },
       }
       const hook = getHook(p)
       hook()
