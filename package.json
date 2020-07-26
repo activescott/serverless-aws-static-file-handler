@@ -54,7 +54,7 @@
   "scripts": {
     "test": "nyc ./node_modules/.bin/mocha './src/test/*.js'",
     "pretest": "npm run lint && npm version --allow-same-version --no-git-tag-version 0.0.0 && npm pack",
-    "lint": "[ \"$TRAVIS_NODE_VERSION\" == \"8\" ] || prettier -l \"**/*.{js,md,yml,json,html}\"",
+    "lint": "[ \"$TRAVIS_NODE_VERSION\" = \"8\" ] || prettier -l \"**/*.{js,md,yml,json,html}\"",
     "lint-fix": "prettier --write \"**/*.{js,md,yml,yaml,json,html}\"",
     "coverage-publish": "cat ./coverage/lcov.info | coveralls"
   },
