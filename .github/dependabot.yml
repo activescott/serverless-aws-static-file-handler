@@ -3,7 +3,7 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       # Check for npm updates on Sundays
       day: "saturday"
     directory: "/"
