@@ -1,0 +1,95 @@
+name: main
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: "Use Node.js (deliberately not using matrix)"
+        uses: actions/setup-node@v1
+        with:
+          node-version: v12.x
+
+      - name: install dependencies
+        run: |
+          npm i
+
+      - name: lint
+        run: |
+          npm run lint
+
+  build_and_test:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node: [8, 10, 12, 14]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: build package
+        run: |
+          npm i
+
+      - name: lint
+        run: |
+          npm run lint
+
+      - name: test
+        run: |
+          npm run test
+
+      - name: publish coverage
+        if: matrix.node-version == v12.x
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-${{ matrix.test_number }}
+          parallel: true
+
+  finish_tests:
+    needs: test
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
+
+  deploy_package:
+    needs: build_and_test
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Use Node.js v12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: v12.x
+
+      - name: build
+        run: |
+          npm i
+          npm run build
+      #- name: debug deploy_package
+      #  uses: actions/bin/debug@master
+
+      - name: deploy via semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm i semantic-release@17
+          ./node_modules/.bin/semantic-release
