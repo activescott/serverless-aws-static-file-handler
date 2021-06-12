@@ -38,11 +38,11 @@
     "mocha": "^7.0.1",
     "nyc": "^15.0.0",
     "prettier": "^2.0.0",
-    "serverless": "^2.33.1",
+    "serverless": "^2.46.0",
     "sinon": "^10.0.0"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "files": [
     "src/error.html",
