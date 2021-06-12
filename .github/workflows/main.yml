@@ -51,7 +51,6 @@ jobs:
           npm run test
 
       - name: publish coverage
-        if: matrix.node-version == v12.x
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
