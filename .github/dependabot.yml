@@ -1,6 +1,6 @@
-# docs v2 https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/configuration-options-for-dependency-updates
 version: 2
 updates:
+  # docs v2 https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/configuration-options-for-dependency-updates
   - package-ecosystem: "npm"
     schedule:
       interval: "monthly"
