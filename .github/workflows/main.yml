@@ -38,14 +38,13 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: set CI_NODE_VERSION
-        run: CI_NODE_VERSION=${{ matrix.node }}
-
       - name: install dependencies
         run: |
           npm i
 
       - name: test
+        env:
+          CI_NODE_VERSION: ${{ matrix.node }}
         run: |
           npm run test
 
