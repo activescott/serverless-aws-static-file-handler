@@ -58,7 +58,7 @@ jobs:
           parallel: true
 
   finish_tests:
-    needs: test
+    needs: build_and_test
     runs-on: ubuntu-20.04
     steps:
       - name: Coveralls Finished
