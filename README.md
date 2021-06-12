@@ -1,8 +1,7 @@
 [![npm version](https://badge.fury.io/js/serverless-aws-static-file-handler.svg)](https://www.npmjs.com/package/serverless-aws-static-file-handler)
 [![npm](https://img.shields.io/npm/dt/serverless-aws-static-file-handler.svg?logo=npm)](https://www.npmjs.com/package/serverless-aws-static-file-handler)
-[![Build Status](https://www.travis-ci.com/activescott/serverless-aws-static-file-handler.svg?branch=master)](https://www.travis-ci.com/github/activescott/serverless-aws-static-file-handler)
+[![Build Status](https://github.com/activescott/serverless-aws-static-file-handler/workflows/main/badge.svg)](https://github.com/activescott/serverless-aws-static-file-handler/actions)
 [![Coverage Status](https://coveralls.io/repos/github/activescott/serverless-aws-static-file-handler/badge.svg)](https://coveralls.io/github/activescott/serverless-aws-static-file-handler)
-[![Greenkeeper badge](https://badges.greenkeeper.io/activescott/serverless-aws-static-file-handler.svg)](https://greenkeeper.io/)
 [![License](https://img.shields.io/github/license/activescott/serverless-aws-static-file-handler.svg)](https://github.com/activescott/serverless-aws-static-file-handler/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/activescott/serverless-aws-static-file-handler.svg?style=social)](https://github.com/activescott/serverless-aws-static-file-handler)
 
@@ -111,7 +110,7 @@ We use [semantic-release](https://github.com/semantic-release/semantic-release) 
 
 | branch | npm distribution tag |
 | ------ | -------------------- |
-| master | latest               |
+| main   | latest               |
 | beta   | beta                 |
 
 To trigger a release use a Conventional Commit following [Angular Commit Message Conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines) on one of the above branches.
