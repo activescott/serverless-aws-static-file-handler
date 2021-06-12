@@ -38,13 +38,12 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: build package
+      - name: set CI_NODE_VERSION
+        run: CI_NODE_VERSION=${{ matrix.node }}
+
+      - name: install dependencies
         run: |
           npm i
-
-      - name: lint
-        run: |
-          npm run lint
 
       - name: test
         run: |
@@ -68,7 +67,7 @@ jobs:
           parallel-finished: true
 
   deploy_package:
-    needs: build_and_test
+    needs: finish_tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
