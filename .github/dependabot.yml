@@ -27,7 +27,7 @@ updates:
       prefix: "chore"
     allow:
       # Allow only direct updates for all packages
-      dependency-type: "direct"
+      - dependency-type: "direct"
 
   - package-ecosystem: "npm"
     directory: "/examples/basic"
@@ -40,7 +40,7 @@ updates:
       prefix: "chore"
     allow:
       # Allow only direct updates for all packages
-      dependency-type: "direct"
+      - dependency-type: "direct"
 
   - package-ecosystem: "npm"
     directory: "/examples/serverless-offline"
@@ -53,4 +53,4 @@ updates:
       prefix: "chore"
     allow:
       # Allow only direct updates for all packages
-      dependency-type: "direct"
+      - dependency-type: "direct"
