@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "serverless": "^2.46.0",
-    "serverless-offline": "^6.0.0"
+    "serverless-offline": "^7.0.0"
   },
   "dependencies": {
     "serverless-aws-static-file-handler": ">=2.0.4"
