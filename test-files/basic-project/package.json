@@ -5,12 +5,10 @@
   "license": "MIT",
   "scripts": {
     "deploy": "serverless deploy",
-    "destroy": "serverless remove",
-    "lint": "prettier --write \"./**/*.{js,md,yml,json,html}\""
+    "destroy": "serverless remove"
   },
   "devDependencies": {
-    "prettier": "^1.19.1",
-    "serverless": "^1.46.1"
+    "serverless": "^2.46.0"
   },
   "dependencies": {
     "serverless-aws-static-file-handler": "file:../../serverless-aws-static-file-handler-0.0.0.tgz"

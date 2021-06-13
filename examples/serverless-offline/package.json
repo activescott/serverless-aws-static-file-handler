@@ -5,16 +5,14 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "deploy": "serverless deploy",
-    "destroy": "serverless remove",
-    "lint": "prettier --write \"./**/*.{js,md,yml,json,html}\""
+    "deploy": "serverless deploy --aws-profile serverless",
+    "destroy": "serverless remove --aws-profile serverless"
   },
   "devDependencies": {
-    "prettier": "^2.0.0",
     "serverless": "^1.46.1",
     "serverless-offline": "^6.0.0"
   },
   "dependencies": {
-    "serverless-aws-static-file-handler": ">2.0.0"
+    "serverless-aws-static-file-handler": ">=2.0.4"
   }
 }
