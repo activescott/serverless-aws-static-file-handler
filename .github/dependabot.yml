@@ -2,16 +2,55 @@ version: 2
 updates:
   # docs v2 https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/configuration-options-for-dependency-updates
   - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "monthly"
       # Check for npm updates on Sundays
       day: "saturday"
     allow:
       - dependency-type: "production"
-    directory: "/"
     commit-message:
       # for production deps, prefix commit messages with "fix" (trigger a patch release)
       prefix: "fix"
       # for development deps, prefix commit messages with "chore" (do NOT trigger an npm release)
       prefix-development: "chore"
       include: "scope"
+
+  - package-ecosystem: "npm"
+    directory: "/test-files/basic-project"
+    schedule:
+      interval: "monthly"
+      # Check for npm updates on Sundays
+      day: "saturday"
+    commit-message:
+      # since these are tests/samples, we'll not require a release of the package
+      prefix: "chore"
+    allow:
+      # Allow only direct updates for all packages
+      - dependency-type: "direct"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/basic"
+    schedule:
+      interval: "monthly"
+      # Check for npm updates on Sundays
+      day: "saturday"
+    commit-message:
+      # since these are tests/samples, we'll not require a release of the package
+      prefix: "chore"
+    allow:
+      # Allow only direct updates for all packages
+      - dependency-type: "direct"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/serverless-offline"
+    schedule:
+      interval: "monthly"
+      # Check for npm updates on Sundays
+      day: "saturday"
+    commit-message:
+      # since these are tests/samples, we'll not require a release of the package
+      prefix: "chore"
+    allow:
+      # Allow only direct updates for all packages
+      - dependency-type: "direct"
