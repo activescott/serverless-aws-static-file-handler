@@ -9,7 +9,7 @@
     "destroy": "serverless remove --aws-profile serverless"
   },
   "devDependencies": {
-    "serverless": "^1.46.1"
+    "serverless": "^2.46.0"
   },
   "dependencies": {
     "serverless-aws-static-file-handler": ">=2.0.4"
