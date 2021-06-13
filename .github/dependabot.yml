@@ -25,9 +25,9 @@ updates:
     commit-message:
       # since these are tests/samples, we'll not require a release of the package
       prefix: "chore"
-      allow:
-        # Allow only direct updates for all packages
-        dependency-type: "direct"
+    allow:
+      # Allow only direct updates for all packages
+      dependency-type: "direct"
 
   - package-ecosystem: "npm"
     directory: "/examples/basic"
@@ -38,9 +38,9 @@ updates:
     commit-message:
       # since these are tests/samples, we'll not require a release of the package
       prefix: "chore"
-      allow:
-        # Allow only direct updates for all packages
-        dependency-type: "direct"
+    allow:
+      # Allow only direct updates for all packages
+      dependency-type: "direct"
 
   - package-ecosystem: "npm"
     directory: "/examples/serverless-offline"
@@ -51,6 +51,6 @@ updates:
     commit-message:
       # since these are tests/samples, we'll not require a release of the package
       prefix: "chore"
-      allow:
-        # Allow only direct updates for all packages
-        dependency-type: "direct"
+    allow:
+      # Allow only direct updates for all packages
+      dependency-type: "direct"
