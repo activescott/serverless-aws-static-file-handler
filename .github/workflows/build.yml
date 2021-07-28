@@ -102,22 +102,35 @@ jobs:
                 echo "path not specified"
                 return 1
               fi
+              EXPECT_CODE=$2
+              if [[ -e "$EXPECT_CODE" ]]; then
+                EXPECT_CODE=200
+              fi
+
               HTTP_CODE=$(curl -s -w '%{http_code}' --compressed --output /dev/null "$APIG_URL/$URL_PATH")
-              if [[ "$HTTP_CODE" = "200" ]]; then
+              if [[ "$HTTP_CODE" = "$EXPECT_CODE" ]]; then
                 echo "/$URL_PATH succeeded"
               else
-                echo "/$URL_PATH failed with code $HTTP_CODE"
+                echo "FAILURE: Expected /$URL_PATH to have code $EXPECT_CODE but it was $HTTP_CODE"
                 exit $HTTP_CODE
               fi
             }
 
+          # 200; these all should succeed
           TEST_HTTP png
-
           TEST_HTTP jpg
-
           TEST_HTTP binary/glyphicons-halflings-regular.woff2
-
           TEST_HTTP binary/subdir/png.png
+
+          # 403
+          TEST_HTTP "ff404.png" 403
+          TEST_HTTP "jpeg404.jpg" 403
+          TEST_HTTP "subdir404/ff.png" 403
+          TEST_HTTP "subdir/ff404.png" 403
+
+          # 404
+          TEST_HTTP "binary/404-glyphicons-halflings-regular.woff2" 404
+          TEST_HTTP "binary/subdir/404-png.png" 404
 
       - name: destroy serverless stack
         # Run this step even if the prior one failed (to clean up)
