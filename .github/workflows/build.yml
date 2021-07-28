@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [main]
+    branches: [main, beta, next]
   pull_request:
     branches: [main]
 
@@ -25,7 +25,7 @@ jobs:
         run: |
           npm run lint
 
-  build_and_test:
+  unit_tests:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -37,6 +37,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: "npm"
 
       - name: install dependencies
         run: |
@@ -55,8 +56,8 @@ jobs:
           flag-name: nodejs-${{ matrix.node }}
           parallel: true
 
-  finish_tests:
-    needs: build_and_test
+  update_code_coverage:
+    needs: unit_tests
     runs-on: ubuntu-20.04
     steps:
       - name: Coveralls Finished
@@ -65,8 +66,90 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
 
+  e2e_tests:
+    needs: unit_tests
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Use Node.js v12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: v12.x
+
+      #- name: debug deploy_package
+      #  uses: actions/bin/debug@master
+      - name: build plugin locally
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          npm i
+          npm pack
+
+      - name: prepare to run end-to-end deploy test
+        env:
+          AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          cd "$GITHUB_WORKSPACE/examples/basic"
+          npm i
+          # now update to use the local plugin built above
+          npm install --save file://../../serverless-aws-static-file-handler-0.0.0.tgz
+          ./node_modules/.bin/serverless config credentials --provider aws --key $AWS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile serverless --overwrite
+
+      - name: run end-to-end deploy and test endpoints
+        run: |
+          cd "$GITHUB_WORKSPACE/examples/basic"
+          npm run deploy
+          # get the APIG endpoint URL:
+          APIG_URL=$(./node_modules/.bin/serverless info --aws-profile serverless | sed -nr 's#^.*(https://.+/dev)/png$#\1#p')
+
+          # CURL to some known good endpoints expecting 200:
+          function TEST_HTTP ()
+            {
+              URL_PATH=$1
+              if [[ -z "$URL_PATH" ]]; then
+                echo "path not specified"
+                return 1
+              fi
+              EXPECT_CODE=$2
+              if [[ -z "$EXPECT_CODE" ]]; then
+                EXPECT_CODE=200
+              fi
+
+              HTTP_CODE=$(curl -s -w '%{http_code}' --compressed --output /dev/null "$APIG_URL/$URL_PATH")
+              if [[ "$HTTP_CODE" = "$EXPECT_CODE" ]]; then
+                echo "/$URL_PATH succeeded (returned expected code $HTTP_CODE)"
+              else
+                echo "FAILURE: Expected /$URL_PATH to have code $EXPECT_CODE but it was $HTTP_CODE"
+                exit $HTTP_CODE
+              fi
+            }
+
+          # 200; these all should succeed
+          TEST_HTTP png
+          TEST_HTTP jpg
+          TEST_HTTP binary/glyphicons-halflings-regular.woff2
+          TEST_HTTP binary/subdir/png.png
+
+          # 403
+          TEST_HTTP "ff404.png" 403
+          TEST_HTTP "jpeg404.jpg" 403
+          TEST_HTTP "subdir404/ff.png" 403
+          TEST_HTTP "subdir/ff404.png" 403
+
+          # 404
+          TEST_HTTP "binary/404-glyphicons-halflings-regular.woff2" 404
+          TEST_HTTP "binary/subdir/404-png.png" 404
+
+      - name: destroy serverless stack
+        # Run this step even if the prior one failed (to clean up)
+        if: ${{ always() }}
+        run: |
+          cd "$GITHUB_WORKSPACE/examples/basic"
+          npm run destroy
+
   deploy_package:
-    needs: finish_tests
+    needs: e2e_tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1

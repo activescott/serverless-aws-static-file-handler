@@ -11,9 +11,9 @@
     "reset": "rm -rfd ./node_modules/ && npm i && npm run deploy"
   },
   "devDependencies": {
-    "serverless": "^1.46.1"
+    "serverless": "^2.52.1"
   },
   "dependencies": {
-    "serverless-aws-static-file-handler": "=2.0.8"
+    "serverless-aws-static-file-handler": ">=3.0.2-beta.1"
   }
 }

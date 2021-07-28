@@ -78,9 +78,9 @@ describe("BinaryMediaTypes", function () {
       p.serverless.service.provider.compiledCloudFormationTemplate.Resources = []
       const hook = getHook(p)
       expect(hook).to.not.throw()
-      expect(logSpy.callCount).to.equal(1)
+      expect(logSpy.callCount).to.equal(2)
       expect(
-        logSpy.calledOnceWithExactly(
+        logSpy.calledWithExactly(
           sinon.match(
             /Amazon API Gateway RestApi resource not found. No BinaryMediaTypes will be added.$/
           )
