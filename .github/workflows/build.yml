@@ -98,18 +98,18 @@ jobs:
           function TEST_HTTP ()
             {
               URL_PATH=$1
-              if [[ -e "$URL_PATH" ]]; then
+              if [[ -z "$URL_PATH" ]]; then
                 echo "path not specified"
                 return 1
               fi
               EXPECT_CODE=$2
-              if [[ -e "$EXPECT_CODE" ]]; then
+              if [[ -z "$EXPECT_CODE" ]]; then
                 EXPECT_CODE=200
               fi
 
               HTTP_CODE=$(curl -s -w '%{http_code}' --compressed --output /dev/null "$APIG_URL/$URL_PATH")
               if [[ "$HTTP_CODE" = "$EXPECT_CODE" ]]; then
-                echo "/$URL_PATH succeeded"
+                echo "/$URL_PATH succeeded (returned expected code $HTTP_CODE)"
               else
                 echo "FAILURE: Expected /$URL_PATH to have code $EXPECT_CODE but it was $HTTP_CODE"
                 exit $HTTP_CODE
