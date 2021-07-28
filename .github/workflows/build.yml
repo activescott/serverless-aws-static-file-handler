@@ -85,7 +85,7 @@ jobs:
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           npm i
-          serverless config credentials --provider aws --key $AWS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
+          serverless config credentials --provider aws --key $AWS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile serverless --overwrite
 
       - name: run end-to-end deploy and test endpoints
         run: |
