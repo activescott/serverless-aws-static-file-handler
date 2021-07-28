@@ -55,7 +55,7 @@ jobs:
           flag-name: nodejs-${{ matrix.node }}
           parallel: true
 
-  finish_unit_tests:
+  update_code_coverage:
     needs: unit_tests
     runs-on: ubuntu-20.04
     steps:
@@ -78,11 +78,14 @@ jobs:
 
       #- name: debug deploy_package
       #  uses: actions/bin/debug@master
-
-      - name: run end-to-end deploy test
+      - name: preapre to run end-to-end deploy test
         env:
           AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          serverless config credentials --provider aws --key $AWS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
+
+      - name: run end-to-end deploy test
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           npm i
@@ -118,9 +121,6 @@ jobs:
       - name: destroy serverless stack
         # Run this step even if the prior one failed (to clean up)
         if: ${{ always() }}
-        env:
-          AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           npm run destroy
