@@ -6,12 +6,13 @@
   "license": "MIT",
   "scripts": {
     "deploy": "serverless deploy --aws-profile serverless",
-    "destroy": "serverless remove --aws-profile serverless"
+    "destroy": "serverless remove --aws-profile serverless",
+    "lint": "prettier --write \"./**/*.{js,md,yml,json,html}\""
   },
   "devDependencies": {
     "serverless": "^2.46.0"
   },
   "dependencies": {
-    "serverless-aws-static-file-handler": ">=2.0.4"
+    "serverless-aws-static-file-handler": "=2.0.8"
   }
 }
