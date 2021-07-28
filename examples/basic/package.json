@@ -14,6 +14,6 @@
     "serverless": "^2.52.1"
   },
   "dependencies": {
-    "serverless-aws-static-file-handler": "file://../../serverless-aws-static-file-handler-0.0.0.tgz"
+    "serverless-aws-static-file-handler": "beta"
   }
 }
