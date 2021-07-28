@@ -10,10 +10,10 @@
     "reset": "rm -rfd ./node_modules/ && npm i && npm run deploy"
   },
   "devDependencies": {
-    "serverless": "^1.46.1",
+    "serverless": "^2.52.1",
     "serverless-offline": "^7.0.0"
   },
   "dependencies": {
-    "serverless-aws-static-file-handler": "beta"
+    "serverless-aws-static-file-handler": ">=3.0.2-beta.1"
   }
 }
