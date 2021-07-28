@@ -6,13 +6,14 @@
   "license": "MIT",
   "scripts": {
     "deploy": "serverless deploy --aws-profile serverless",
-    "destroy": "serverless remove --aws-profile serverless"
+    "destroy": "serverless remove --aws-profile serverless",
+    "reset": "rm -rfd ./node_modules/ && npm i && npm run deploy"
   },
   "devDependencies": {
-    "serverless": "^2.46.0",
+    "serverless": "^1.46.1",
     "serverless-offline": "^7.0.0"
   },
   "dependencies": {
-    "serverless-aws-static-file-handler": ">=2.0.4"
+    "serverless-aws-static-file-handler": "=2.0.8"
   }
 }
