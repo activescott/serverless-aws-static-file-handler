@@ -10,11 +10,6 @@ class BinaryMediaTypes {
     this.serverless = serverless
     this.options = options
     this.provider = this.serverless.getProvider("aws")
-    this.commands = {
-      deploy: {
-        lifecycleEvents: ["resources"],
-      },
-    }
     this.hooks = {
       "package:compileEvents": this.packageCompileEvents.bind(this),
     }
@@ -65,6 +60,7 @@ class BinaryMediaTypes {
   }
 
   packageCompileEvents() {
+    this.log("Preparing to add binary media types (package:compileEvents)...")
     const restApi = this.getRestApi()
     this.addBinaryMediaTypes(restApi)
   }
