@@ -37,6 +37,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: "npm"
 
       - name: install dependencies
         run: |
@@ -78,6 +79,12 @@ jobs:
 
       #- name: debug deploy_package
       #  uses: actions/bin/debug@master
+      - name: build plugin locally
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          npm i
+          npm pack
+
       - name: prepare to run end-to-end deploy test
         env:
           AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
@@ -85,6 +92,8 @@ jobs:
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           npm i
+          # now update to use the local plugin built above
+          npm install --save file://../../serverless-aws-static-file-handler-0.0.0.tgz
           ./node_modules/.bin/serverless config credentials --provider aws --key $AWS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile serverless --overwrite
 
       - name: run end-to-end deploy and test endpoints
