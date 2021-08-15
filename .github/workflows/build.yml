@@ -77,15 +77,13 @@ jobs:
         with:
           node-version: v12.x
 
-      #- name: debug deploy_package
-      #  uses: actions/bin/debug@master
       - name: build plugin locally
         run: |
           cd "$GITHUB_WORKSPACE"
           npm i
           npm pack
 
-      - name: prepare to run end-to-end deploy test
+      - name: prepare to run end-to-end test
         env:
           AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -106,7 +104,7 @@ jobs:
           npm install --save file://../../serverless-aws-static-file-handler-0.0.0.tgz
           ./node_modules/.bin/serverless config credentials --provider aws --key $AWS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile serverless --overwrite
 
-      - name: run end-to-end deploy and test endpoints
+      - name: run end-to-end and test endpoints
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           npm run deploy
@@ -158,7 +156,7 @@ jobs:
           cd "$GITHUB_WORKSPACE/examples/basic"
           npm run destroy
 
-  deploy_package:
+  publish_package:
     needs: e2e_tests
     runs-on: ubuntu-20.04
     steps:
@@ -169,13 +167,12 @@ jobs:
         with:
           node-version: v12.x
 
-      #- name: debug deploy_package
+      #- name: debug publish_package
       #  uses: actions/bin/debug@master
 
-      - name: deploy via semantic-release
+      - name: publish to npm
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm i semantic-release@17
-          ./node_modules/.bin/semantic-release
+          npx semantic-release@17
