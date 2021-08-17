@@ -1,8 +1,13 @@
 name: build
 
+# We want pushes to main, beta, and next to trigger a publish to npm for the corresponding npm dist-tag.
+# NOTE: semantic-release detects pull requests and won't deploy on them so we don't have to deal with that complexity here.
+# Any pull request should run all tests.
+# NOTE: e2e tests use shared resource (AWS) and if they run concurrently they step on one another and cause errors.
+#       This can happen for beta & next branches if a PR targeting main also exists for them. There is some logic in e2e_tests job to mitigate this.
 on:
   push:
-    branches: [beta, next]
+    branches: [main, beta, next]
   pull_request:
     branches: [main]
 
@@ -69,6 +74,12 @@ jobs:
   e2e_tests:
     needs: unit_tests
     runs-on: ubuntu-20.04
+    env:
+      # e2e tests use a shared resource in AWS. Since we trigger on both a push to beta/next and a PR with destination branch of main, a PR against beta/next will cause them to run concurrently and causes errors. To prevent this contention we use a serverless stage.
+      # For more information on serverless stages:
+      # - https://www.serverless.com/framework/docs/providers/aws/cli-reference/deploy/
+      # - https://www.serverless.com/framework/docs/providers/aws/guide/deploying#tips
+      SERVERLESS_STAGE: ${{ github.event_name }}
     steps:
       - uses: actions/checkout@v1
 
@@ -109,7 +120,8 @@ jobs:
           cd "$GITHUB_WORKSPACE/examples/basic"
           npm run deploy
           # get the APIG endpoint URL:
-          APIG_URL=$(./node_modules/.bin/serverless info --aws-profile serverless | sed -nr 's#^.*(https://.+/dev)/png$#\1#p')
+          echo "Deploying serverless stage $SERVERLESS_STAGE"
+          APIG_URL=$(./node_modules/.bin/serverless info --aws-profile serverless --stage $SERVERLESS_STAGE | sed -nr 's#^.*(https://.+/dev)/png$#\1#p')
 
           # CURL to some known good endpoints expecting 200:
           function TEST_HTTP ()
@@ -154,10 +166,11 @@ jobs:
         if: ${{ always() }}
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
-          npm run destroy
+          echo "Destroying serverless stage $SERVERLESS_STAGE"
+          APIG_URL=$(./node_modules/.bin/serverless remove --aws-profile serverless --stage $SERVERLESS_STAGE
 
   publish_package:
-    needs: e2e_tests
+    needs: [e2e_tests, unit_tests]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
