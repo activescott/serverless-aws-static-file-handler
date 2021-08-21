@@ -79,7 +79,9 @@ jobs:
       # For more information on serverless stages:
       # - https://www.serverless.com/framework/docs/providers/aws/cli-reference/deploy/
       # - https://www.serverless.com/framework/docs/providers/aws/guide/deploying#tips
-      SERVERLESS_STAGE: ${{ github.event_name }}
+      # github.run_id: A unique number for each run within a repository. This number does not change if you re-run the workflow run. https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
+      # github format: https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#format
+      SERVERLESS_STAGE: ${{ github.event_name == "pull_request" && format('pr{0}', github.job_id) || format('push{0}', github.job_id) }}
     steps:
       - uses: actions/checkout@v1
 
