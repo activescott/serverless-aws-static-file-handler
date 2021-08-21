@@ -124,7 +124,7 @@ jobs:
           ./node_modules/.bin/serverless deploy --aws-profile serverless --stage $SERVERLESS_STAGE
 
           # get the APIG endpoint URL:
-          APIG_URL=$(./node_modules/.bin/serverless info --aws-profile serverless --stage $SERVERLESS_STAGE | sed -nr 's#^.*(https://.+/dev)/png$#\1#p')
+          APIG_URL=$(./node_modules/.bin/serverless info --aws-profile serverless --stage $SERVERLESS_STAGE | sed -nr "s#^.*(https://.+/$SERVERLESS_STAGE)/png\$#\1#p")
           echo "Discovered APIG_URL: $APIG_URL"
 
           # CURL to some known good endpoints expecting 200:
