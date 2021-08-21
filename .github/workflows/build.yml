@@ -167,7 +167,7 @@ jobs:
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           echo "Destroying serverless stage $SERVERLESS_STAGE"
-          APIG_URL=$(./node_modules/.bin/serverless remove --aws-profile serverless --stage $SERVERLESS_STAGE
+          ./node_modules/.bin/serverless remove --aws-profile serverless --stage $SERVERLESS_STAGE
 
   publish_package:
     needs: [e2e_tests, unit_tests]
