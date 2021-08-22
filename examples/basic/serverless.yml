@@ -1,4 +1,4 @@
-service: static-file-handler-demo-proxy
+service: static-file-handler-demo
 
 plugins:
   - serverless-aws-static-file-handler/plugins/BinaryMediaTypes
