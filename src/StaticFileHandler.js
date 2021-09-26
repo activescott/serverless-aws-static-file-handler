@@ -174,24 +174,42 @@ class StaticFileHandler {
    * @param {*string} errorText The error to add to the page.
    */
   async responseAsError(errorText, statusCode) {
-    let filePath
-    let customErrorPagePathIsValid
-    if (this.customErrorPagePath) {
-      filePath = path.join(this.clientFilesPath, this.customErrorPagePath)
-      try {
-        await accessAsync(filePath, fs.constants.R_OK)
-        customErrorPagePathIsValid = true
-      } catch (err) {
-        customErrorPagePathIsValid = false
-      }
-    }
-    if (!customErrorPagePathIsValid) {
-      filePath = path.join(__dirname, "error.html")
-    }
-    const viewData = {
+    const context = {
       errorText: errorText,
     }
-    return this.readFileAsResponse(filePath, viewData, statusCode)
+    if (this.customErrorPagePath) {
+      let filePath = path.join(this.clientFilesPath, this.customErrorPagePath)
+      try {
+        await accessAsync(filePath, fs.constants.R_OK)
+        return this.readFileAsResponse(filePath, context, statusCode)
+      } catch (err) {
+        console.warn(
+          "serverless-aws-static-file-handler: Error using customErrorPagePath",
+          this.customErrorPagePath,
+          ". Using fallback error HTML."
+        )
+      }
+    }
+
+    const DEFAULT_ERROR_HTML = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Error</title>
+  </head>
+
+  <body>
+    {errorText}
+  </body>
+</html>
+`
+    return StaticFileHandler.readStringAsResponse(
+      DEFAULT_ERROR_HTML,
+      context,
+      statusCode,
+      "text/html",
+      false
+    )
   }
 
   /**

@@ -1,0 +1,28 @@
+{
+  "name": "serverless-aws-static-file-handler-serverless-webpack-example",
+  "version": "1.0.0",
+  "description": "serverless-aws-static-file-handler and serverless-webpack example",
+  "scripts": {
+    "html": "serverless invoke local --function=html --path=./event.json",
+    "png": "serverless invoke local --function=png --path=./event.json",
+    "notfound": "serverless invoke local --function=notfound --path=./event.json"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "serverless-aws-static-file-handler": "file:../..",
+    "source-map-support": "^0.5.19"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-transform-runtime": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-source-map-support": "^2.1.2",
+    "file-loader": "^4.3.0",
+    "serverless": "^1.77.1",
+    "serverless-offline": "^6.5.0",
+    "serverless-webpack": "^5.3",
+    "webpack": "^4.44.1",
+    "webpack-node-externals": "^2.5.0"
+  }
+}

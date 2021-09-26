@@ -1,0 +1,13 @@
+{
+  "resource": null,
+  "httpMethod": "GET",
+  "headers": {},
+  "multiValueHeaders": {},
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {},
+  "body": null,
+  "isBase64Encoded": false
+}
