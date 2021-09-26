@@ -1,0 +1,16 @@
+{
+  "comments": false,
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "12"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "source-map-support"
+  ]
+}

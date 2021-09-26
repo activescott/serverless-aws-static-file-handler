@@ -1,0 +1,40 @@
+service: babel-webpack-4-example
+
+# Add the serverless-webpack plugin
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+    # If you use Yarn instead of NPM in your environment, uncomment the following line.
+    # packager: yarn
+
+package:
+  individually: true
+
+functions:
+  html:
+    handler: handler.html
+    events:
+      - http:
+          path: /
+          method: get
+  png:
+    handler: handler.png
+    events:
+      - http:
+          path: png
+          method: get
+  notfound:
+    handler: handler.notfound
+    events:
+      - http:
+          path: notfound
+          method: get
