@@ -175,7 +175,11 @@ class StaticFileHandler {
    */
   async responseAsError(errorText, statusCode) {
     const context = {
-      errorText: errorText,
+      staticFileHandler: {
+        viewData: {
+          errorText: errorText,
+        },
+      },
     }
     if (this.customErrorPagePath) {
       let filePath = path.join(this.clientFilesPath, this.customErrorPagePath)
@@ -199,7 +203,7 @@ class StaticFileHandler {
   </head>
 
   <body>
-    {errorText}
+    {{errorText}}
   </body>
 </html>
 `

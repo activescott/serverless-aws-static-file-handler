@@ -131,37 +131,59 @@ describe("StaticFileHandler", function () {
       })
     })
 
-    it("should return 404 when no path parameters", function () {
-      const event = mockEvent({ path: "doesntexist.404" })
-      let h = new StaticFileHandler(STATIC_FILES_PATH)
-      const response = h.get(event, null)
-      return expect(response)
-        .to.eventually.haveOwnProperty("statusCode")
-        .that.equals(404)
-    })
+    describe("error response", function () {
+      it("should include viewData in default error page", function () {
+        const event = mockEvent({ path: "doesntexist.404" })
+        let h = new StaticFileHandler(STATIC_FILES_PATH)
+        const response = h.get(event, null)
+        // the default error page mentions page name and "does not exist"
+        return expect(response)
+          .to.eventually.haveOwnProperty("body")
+          .that.matches(/doesntexist\.404 does not exist/)
+      })
 
-    it("should return 404 customErrorPagePath is invalid", function () {
-      const event = mockEvent({ path: "doesntexist.404" })
-      let h = new StaticFileHandler(
-        STATIC_FILES_PATH,
-        "error-page-doesnt-exist-either.html"
-      )
-      const response = h.get(event, null)
-      return expect(response)
-        .to.eventually.haveOwnProperty("statusCode")
-        .that.equals(404)
-    })
+      it("should include viewData in custom error page", function () {
+        const event = mockEvent({ path: "doesntexist.404" })
+        let h = new StaticFileHandler(STATIC_FILES_PATH, "custom-error.html")
+        const response = h.get(event, null)
+        // the default error page mentions page name and "does not exist"
+        return expect(response)
+          .to.eventually.haveOwnProperty("body")
+          .that.matches(/doesntexist\.404 does not exist/)
+      })
 
-    it("should use customErrorPagePath", async function () {
-      const event = mockEvent({ path: "doesntexist.404" })
-      let h = new StaticFileHandler(STATIC_FILES_PATH, "custom-error.html")
-      const response = h.get(event, null)
-      expect(response)
-        .to.eventually.haveOwnProperty("statusCode")
-        .that.equals(404)
-      return expect(response)
-        .to.eventually.haveOwnProperty("body")
-        .that.matches(/<title>CUSTOM<\/title>/)
+      it("should return 404 when no path parameters", function () {
+        const event = mockEvent({ path: "doesntexist.404" })
+        let h = new StaticFileHandler(STATIC_FILES_PATH)
+        const response = h.get(event, null)
+        return expect(response)
+          .to.eventually.haveOwnProperty("statusCode")
+          .that.equals(404)
+      })
+
+      it("should return 404 customErrorPagePath is invalid", function () {
+        const event = mockEvent({ path: "doesntexist.404" })
+        let h = new StaticFileHandler(
+          STATIC_FILES_PATH,
+          "error-page-doesnt-exist-either.html"
+        )
+        const response = h.get(event, null)
+        return expect(response)
+          .to.eventually.haveOwnProperty("statusCode")
+          .that.equals(404)
+      })
+
+      it("should use customErrorPagePath", async function () {
+        const event = mockEvent({ path: "doesntexist.404" })
+        let h = new StaticFileHandler(STATIC_FILES_PATH, "custom-error.html")
+        const response = h.get(event, null)
+        expect(response)
+          .to.eventually.haveOwnProperty("statusCode")
+          .that.equals(404)
+        return expect(response)
+          .to.eventually.haveOwnProperty("body")
+          .that.matches(/<title>CUSTOM<\/title>/)
+      })
     })
 
     /**
