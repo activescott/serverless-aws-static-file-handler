@@ -100,7 +100,7 @@ jobs:
 
       - name: run local end-to-end test in serverless-offline
         run: |
-          "$GITHUB_WORKSPACE/test-files/scripts/test-files/scripts/test-local-e2e.sh"
+          "$GITHUB_WORKSPACE/test-files/scripts/test-local-e2e.sh"
 
       - name: cleandup local end-to-end test in serverless-offline
         # Run this step even if the prior one failed (to clean up)
