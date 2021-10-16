@@ -139,7 +139,7 @@ jobs:
 
           # 200; these all should succeed
           $TEST_HTTP_EXEC $ROOT_URL/binary/png.png
-          $TEST_HTTP_EXEC $ROOT_URL/binary/jpg
+          $TEST_HTTP_EXEC $ROOT_URL/binary/jpg.jpg
           $TEST_HTTP_EXEC $ROOT_URL/binary/glyphicons-halflings-regular.woff2
           $TEST_HTTP_EXEC $ROOT_URL/binary/subdir/png.png
 
