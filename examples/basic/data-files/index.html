@@ -4,16 +4,16 @@
     <meta charset="utf-8" />
   </head>
 
-  <div id="valid" style="border: 1px solid gray;">
+  <div id="valid" style="border: 1px solid gray">
     These should all load and either be a valid image or a font:
   </div>
 
-  <div id="invalid403" style="border: 1px solid gray;">
+  <div id="invalid403" style="border: 1px solid gray">
     These each have a path that does not have a route (<code>http</code> event)
     setup in serverless.yml. They should all be returning 403:
   </div>
 
-  <div id="invalid404" style="border: 1px solid gray;">
+  <div id="invalid404" style="border: 1px solid gray">
     These each have a valid route (<code>http</code> event) setup in
     serverless.yml, but the file doesn't exist on disk. They should all be
     returning 404:

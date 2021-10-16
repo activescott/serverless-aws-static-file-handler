@@ -22,8 +22,8 @@ class BinaryMediaTypes {
   }
 
   getRestApi() {
-    const resources = this.serverless.service.provider
-      .compiledCloudFormationTemplate.Resources
+    const resources =
+      this.serverless.service.provider.compiledCloudFormationTemplate.Resources
     return _.find(resources, (r) => r.Type === "AWS::ApiGateway::RestApi")
   }
 

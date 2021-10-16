@@ -75,7 +75,8 @@ describe("BinaryMediaTypes", function () {
       const api = createRestApi()
       const p = createPlugin(api)
       // remove Rest API from service (maybe user isn't using http events/APIG?):
-      p.serverless.service.provider.compiledCloudFormationTemplate.Resources = []
+      p.serverless.service.provider.compiledCloudFormationTemplate.Resources =
+        []
       const hook = getHook(p)
       expect(hook).to.not.throw()
       expect(logSpy.callCount).to.equal(2)
@@ -107,7 +108,8 @@ describe("BinaryMediaTypes", function () {
        * ...
        * Plugin is expecting to read this like: expecting:  serverless.service.custom.apiGateway.binaryMediatypes: []
        */
-      const CONFIG_ERROR_REGEX = /github\.com\/activescott\/serverless\-aws\-static\-file\-handler\#usage for information on how to configure$/
+      const CONFIG_ERROR_REGEX =
+        /github\.com\/activescott\/serverless\-aws\-static\-file\-handler\#usage for information on how to configure$/
       it("should throw helpful messages when no custom config", function () {
         const api = createRestApi()
         const p = createPlugin(api)
