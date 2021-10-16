@@ -18,23 +18,12 @@ provider:
 
 functions:
   html:
-    handler: handler.html
+    handler: handler.root
     events:
       - http:
           path: /
           method: get
-  png:
-    handler: handler.png
-    events:
-      - http:
-          path: png
-          method: get
-  jpg:
-    handler: handler.jpg
-    events:
-      - http:
-          path: jpg
-          method: get
+
   binary:
     handler: handler.binary
     events:
