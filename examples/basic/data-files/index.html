@@ -3,6 +3,19 @@
   <head>
     <meta charset="utf-8" />
   </head>
+  <style id="styles">
+    .test-case .box {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      border: 1px solid lightgray;
+      width: 32px;
+      height: 32px;
+      font-weight: bold;
+    }
+  </style>
+
+  <div id="banner" style="background-color: yellow"></div>
 
   <div id="valid" style="border: 1px solid gray">
     These should all load and either be a valid image or a font:
@@ -10,85 +23,138 @@
 
   <div id="invalid403" style="border: 1px solid gray">
     These each have a path that does not have a route (<code>http</code> event)
-    setup in serverless.yml. They should all be returning 403:
+    setup in serverless.yml. They should all be returning
+    <span style="color: red">403</span> OR
+    <span style="color: red">404: Not Found</span> (API Gateway in prod reports
+    them as 403, but serverless-offline reports them as 404):
   </div>
 
   <div id="invalid404" style="border: 1px solid gray">
     These each have a valid route (<code>http</code> event) setup in
     serverless.yml, but the file doesn't exist on disk. They should all be
-    returning 404:
+    returning <span style="color: red">404: Not Found</span>:
   </div>
 
   <script lang="javascript">
-    const validPaths = [
-      "png",
-      "jpg",
-      "binary/glyphicons-halflings-regular.woff2",
-      "binary/subdir/png.png"
-    ]
-
-    const invalid403 = [
-      "ff404.png",
-      "jpeg404.jpg",
-      "subdir404/ff.png",
-      "subdir/ff404.png",
-    ]
-
-    const invalid404 = [
-      "binary/404-glyphicons-halflings-regular.woff2",
-      "binary/subdir/404-png.png"
-    ]
-    main()
-
-    async function main() {
-      await addPathsToList(validPaths, document.querySelector("#valid"))
-      await addPathsToList(invalid403, document.querySelector("#invalid403"))
-      await addPathsToList(invalid404, document.querySelector("#invalid404"))
-    }
-
-    async function addPathsToList(paths, parentElm) {
-      let ul = document.createElement("ul")
-      parentElm.appendChild(ul)
-      paths.forEach(async path => {
-        console.log("adding path:", path)
-        let contentType
-        let response
-        let lastError
-        try {
-          response = await fetch(path)
-          contentType = response.headers.get("Content-type")
-          if (!response.ok)
-            throw new Error(`Error response status: ${response.status}: ${response.statusText}`)
-        } catch (err) {
-          lastError = err
-          console.error("Error fetching path", path, ":", err)
-          contentType = `ERROR/${err.message}`
+        function verifyRootPath() {
+          // I've wated time more than once trying to figure this out:
+          if (!window.location.href.endsWith("/")) {
+            let msg = document.createElement("span")
+            msg.innerText = "⛔️ The root path does not end with a backslash (/)! It probably should (and serverless-offline doesn't add it by defualt)."
+            let fixit = document.createElement("a")
+            fixit.href = window.location.href + "/"
+            fixit.innerText = "Fix it!"
+            document.querySelector("#banner").appendChild(msg)
+            document.querySelector("#banner").appendChild(fixit)
+          }
         }
-        let blob = null
-        try {
-          if (response)
-            blob = await response.blob()
-        } catch (err) {
-          lastError = err
-          console.error("Error getting blob for path", path, ":", err)
+        verifyRootPath()
+        // this loads the various images/files:
+        const validPaths = [
+          { path: "binary/png.png", expectedStatus: [200] },
+          { path: "binary/jpg.jpg", expectedStatus: [200]},
+          { path: "binary/subdir/png.png", expectedStatus: [200]},
+          { path: "binary/glyphicons-halflings-regular.woff2", expectedStatus: [200]},
+          { path: "binary/subdir/png.png", expectedStatus: [200]}
+        ]
+
+        const invalid403 = [
+          { path: "ff404.png", expectedStatus: [403, 404]},
+          { path: "jpeg404.jpg", expectedStatus: [403, 404]},
+          { path: "subdir404/ff.png", expectedStatus: [403, 404]},
+          { path: "subdir/ff404.png", expectedStatus: [403, 404]}
+        ]
+
+        const invalid404 = [
+          { path: "binary/404-glyphicons-halflings-regular.woff2", expectedStatus: [404]},
+          { path: "binary/subdir/404-png.png", expectedStatus: [404]}
+        ]
+        main()
+
+        async function main() {
+          await addTestsToPage(validPaths, document.querySelector("#valid"))
+          await addTestsToPage(invalid403, document.querySelector("#invalid403"))
+          await addTestsToPage(invalid404, document.querySelector("#invalid404"))
         }
 
-        const li = document.createElement("li")
-        li.style.color = !lastError ? "currentColor" : "red"
-        const img = document.createElement("img")
-        img.style.cssText = "border: 1px solid orange; display:inline-block; width: 32px; height: 32px"
-        if (blob) {
-          img.src = URL.createObjectURL(blob)
+        async function addTestsToPage(tests, parentElm) {
+          let ul = document.createElement("ul")
+          parentElm.appendChild(ul)
+          tests.forEach(async test => {
+            console.log("adding path:", test.path)
+            let contentType
+            let response
+            let lastError
+            try {
+              response = await fetch(test.path)
+              contentType = response.headers.get("Content-type") + `, ${response.status}: ${response.statusText}`
+
+              if (!response.ok)
+                throw new Error(`Error response status: ${response.status}: ${response.statusText}`)
+            } catch (err) {
+              lastError = err
+              console.error("Error fetching path", test.path, ":", err)
+              contentType = `ERROR/${err.message}`
+            }
+            let blob = null
+            try {
+              if (response)
+                blob = await response.blob()
+            } catch (err) {
+              lastError = err
+              console.error("Error getting blob for path", test.path, ":", err)
+            }
+
+            const li = document.createElement("li")
+            li.className = "test-case"
+            li.style.color = !lastError ? "currentColor" : "red"
+            const preview = createPreviewElement(test.path, contentType, blob)
+            const status = createTestStatusElement(test, response.status)
+
+            li.appendChild(status)
+            li.appendChild(preview)
+            li.append(` ${test.path}`)
+            const span = document.createElement("span")
+
+            span.append(` (${contentType})`)
+            li.appendChild(span)
+            ul.appendChild(li)
+          })
         }
 
-        li.appendChild(img)
-        li.append(` ${path}`)
-        const span = document.createElement("span")
+        function createTestStatusElement(test, actualStatus) {
+          const elm = document.createElement("div")
+          elm.className = "box"
+          const passed = test.expectedStatus.includes(actualStatus)
+          elm.style.setProperty("color", passed ? "green" : "red")
+          elm.innerText = passed ? "✅" : "❌"
+          return elm
+        }
 
-        span.append(` (Content-Type: ${contentType})`)
-        li.appendChild(span)
-        ul.appendChild(li)
-      })
-    }
+        function createPreviewElement(path, contentType, blob) {
+          blobUrl = URL.createObjectURL(blob)
+          let elm = null
+          if (contentType.startsWith("font")) {
+            const fontFamilyName = blobUrl.replace(/[\W]/gi, "_")
+            const styles = document.querySelector("#styles")
+            styles.innerHTML += `@font-face {
+      font-family: "${fontFamilyName}";
+      src: url(${path});
+    }`
+            elm = document.createElement("div")
+            elm.style.setProperty("font-family", fontFamilyName)
+            elm.style.setProperty("font-size", "24px")
+            elm.innerText = "Aa"
+          }
+          else {
+            // assume image
+            elm = document.createElement("img")
+            if (blob) {
+              elm.src = blobUrl
+            }
+          }
+          elm.className = "box"
+          return elm
+        }
   </script>
 </html>

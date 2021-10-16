@@ -7,7 +7,10 @@
   "scripts": {
     "deploy": "serverless deploy --aws-profile serverless",
     "destroy": "serverless remove --aws-profile serverless",
-    "reset": "rm -rfd ./node_modules/ && npm i && npm run deploy"
+    "reset": "rm -rfd ./node_modules/ && npm i && npm run deploy",
+    "offline": "serverless offline",
+    "dev-link": "npm link ../../",
+    "dev-unlink": "npm i"
   },
   "devDependencies": {
     "serverless": "^2.52.1",
