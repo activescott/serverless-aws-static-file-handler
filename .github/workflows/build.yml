@@ -106,6 +106,9 @@ jobs:
           # run severless-offline in background:
           ./node_modules/.bin/serverless offline &
 
+          # wait on serverless-offline to start
+          sleep 2
+
           # CURL to some known good endpoints expecting 200:
           TEST_HTTP_EXEC=$GITHUB_WORKSPACE/test-files/scripts/test-http.sh
           ROOT_URL=http://localhost:3000/dev
