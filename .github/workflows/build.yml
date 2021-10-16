@@ -100,34 +100,7 @@ jobs:
 
       - name: run local end-to-end test in serverless-offline
         run: |
-          cd "$GITHUB_WORKSPACE/examples/serverless-offline"
-          npm install
-
-          # run severless-offline in background:
-          ./node_modules/.bin/serverless offline &
-
-          # wait on serverless-offline to start
-          sleep 2
-
-          # CURL to some known good endpoints expecting 200:
-          TEST_HTTP_EXEC=$GITHUB_WORKSPACE/test-files/scripts/test-http.sh
-          ROOT_URL=http://localhost:3000/dev
-
-          # 200; these all should succeed
-          $TEST_HTTP_EXEC $ROOT_URL/binary/png.png
-          $TEST_HTTP_EXEC $ROOT_URL/binary/jpg
-          $TEST_HTTP_EXEC $ROOT_URL/binary/glyphicons-halflings-regular.woff2
-          $TEST_HTTP_EXEC $ROOT_URL/binary/subdir/png.png
-
-          # 403
-          $TEST_HTTP_EXEC "$ROOT_URL/ff404.png" 403
-          $TEST_HTTP_EXEC "$ROOT_URL/jpeg404.jpg" 403
-          $TEST_HTTP_EXEC "$ROOT_URL/subdir404/ff.png" 403
-          $TEST_HTTP_EXEC "$ROOT_URL/subdir/ff404.png" 403
-
-          # 404
-          $TEST_HTTP_EXEC "$ROOT_URL/binary/404-glyphicons-halflings-regular.woff2" 404
-          $TEST_HTTP_EXEC "$ROOT_URL/binary/subdir/404-png.png" 404
+          "$GITHUB_WORKSPACE/test-files/scripts/test-files/scripts/test-local-e2e.sh"
 
       - name: cleandup local end-to-end test in serverless-offline
         # Run this step even if the prior one failed (to clean up)

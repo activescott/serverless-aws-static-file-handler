@@ -11,11 +11,14 @@ if [ -z "$EXPECT_CODE" ]; then
   EXPECT_CODE=200
 fi
 
+echo "Testing $URL_PATH for code $EXPECT_CODE..."
 HTTP_CODE=$(curl -s -w '%{http_code}' --compressed --output /dev/null "$URL_PATH")
 if [ "$HTTP_CODE" = "$EXPECT_CODE" ]; then
-  echo "$URL_PATH succeeded (returned expected code $HTTP_CODE)"
+  echo "Testing $URL_PATH succeeded (returned expected code $HTTP_CODE)"
   exit 0
 else
-  echo "FAILURE: Expected $URL_PATH to have code $EXPECT_CODE but it was $HTTP_CODE"
+  echo "\n˅˅˅˅˅ FAILURE ˅˅˅˅˅"
+  echo "*** $URL_PATH *FAILED*. . Expected to have code $EXPECT_CODE but was $HTTP_CODE ***"
+  echo "^^^^^ FAILURE ^^^^^\n"
   exit 1
 fi
