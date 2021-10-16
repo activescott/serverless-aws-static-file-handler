@@ -101,7 +101,7 @@ jobs:
       - name: run local end-to-end test in serverless-offline
         run: |
           cd "$GITHUB_WORKSPACE/examples/serverless-offline"
-          npm run install
+          npm install
 
           # run severless-offline in background:
           ./node_modules/.bin/serverless offline &
@@ -130,7 +130,7 @@ jobs:
         # Run this step even if the prior one failed (to clean up)
         if: ${{ always() }}
         run: |
-          pkill -fl "serverless offline"
+          pkill -f "serverless offline"
 
       - name: prepare to run remote end-to-end test
         env:
