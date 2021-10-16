@@ -98,7 +98,41 @@ jobs:
           npm i
           npm pack
 
-      - name: prepare to run end-to-end test
+      - name: run local end-to-end test in serverless-offline
+        run: |
+          cd "$GITHUB_WORKSPACE/examples/serverless-offline"
+          npm run install
+
+          # run severless-offline in background:
+          ./node_modules/.bin/serverless offline &
+
+          # CURL to some known good endpoints expecting 200:
+          TEST_HTTP_EXEC=$GITHUB_WORKSPACE/test-files/scripts/test-http.sh
+          ROOT_URL=http://localhost:3000/dev
+
+          # 200; these all should succeed
+          $TEST_HTTP_EXEC $ROOT_URL/binary/png.png
+          $TEST_HTTP_EXEC $ROOT_URL/binary/jpg
+          $TEST_HTTP_EXEC $ROOT_URL/binary/glyphicons-halflings-regular.woff2
+          $TEST_HTTP_EXEC $ROOT_URL/binary/subdir/png.png
+
+          # 403
+          $TEST_HTTP_EXEC "$ROOT_URL/ff404.png" 403
+          $TEST_HTTP_EXEC "$ROOT_URL/jpeg404.jpg" 403
+          $TEST_HTTP_EXEC "$ROOT_URL/subdir404/ff.png" 403
+          $TEST_HTTP_EXEC "$ROOT_URL/subdir/ff404.png" 403
+
+          # 404
+          $TEST_HTTP_EXEC "$ROOT_URL/binary/404-glyphicons-halflings-regular.woff2" 404
+          $TEST_HTTP_EXEC "$ROOT_URL/binary/subdir/404-png.png" 404
+
+      - name: cleandup local end-to-end test in serverless-offline
+        # Run this step even if the prior one failed (to clean up)
+        if: ${{ always() }}
+        run: |
+          pkill -fl "serverless offline"
+
+      - name: prepare to run remote end-to-end test
         env:
           AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -119,55 +153,37 @@ jobs:
           npm install --save file://../../serverless-aws-static-file-handler-0.0.0.tgz
           ./node_modules/.bin/serverless config credentials --provider aws --key $AWS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile serverless --overwrite
 
-      - name: run end-to-end and test endpoints
+      - name: run remote end-to-end test
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           echo "Deploying serverless stage $SERVERLESS_STAGE"
           ./node_modules/.bin/serverless deploy --aws-profile serverless --stage $SERVERLESS_STAGE
 
           # get the APIG endpoint URL:
-          APIG_URL=$(./node_modules/.bin/serverless info --aws-profile serverless --stage $SERVERLESS_STAGE | sed -nr "s#^.*(https://.+/$SERVERLESS_STAGE)/png\$#\1#p")
+          APIG_URL=$(./node_modules/.bin/serverless info --aws-profile serverless --stage $SERVERLESS_STAGE | sed -nr "s#^.*(https://.+/$SERVERLESS_STAGE)\$#\1#p")
           echo "Discovered APIG_URL: $APIG_URL"
 
           # CURL to some known good endpoints expecting 200:
-          function TEST_HTTP ()
-            {
-              URL_PATH=$1
-              if [[ -z "$URL_PATH" ]]; then
-                echo "path not specified"
-                return 1
-              fi
-              EXPECT_CODE=$2
-              if [[ -z "$EXPECT_CODE" ]]; then
-                EXPECT_CODE=200
-              fi
-
-              HTTP_CODE=$(curl -s -w '%{http_code}' --compressed --output /dev/null "$APIG_URL/$URL_PATH")
-              if [[ "$HTTP_CODE" = "$EXPECT_CODE" ]]; then
-                echo "/$URL_PATH succeeded (returned expected code $HTTP_CODE)"
-              else
-                echo "FAILURE: Expected /$URL_PATH to have code $EXPECT_CODE but it was $HTTP_CODE"
-                exit $HTTP_CODE
-              fi
-            }
+          TEST_HTTP_EXEC=$GITHUB_WORKSPACE/test-files/scripts/test-http.sh
+          ROOT_URL=$APIG_URL
 
           # 200; these all should succeed
-          TEST_HTTP png
-          TEST_HTTP jpg
-          TEST_HTTP binary/glyphicons-halflings-regular.woff2
-          TEST_HTTP binary/subdir/png.png
+          $TEST_HTTP_EXEC $ROOT_URL/binary/png.png
+          $TEST_HTTP_EXEC $ROOT_URL/binary/jpg
+          $TEST_HTTP_EXEC $ROOT_URL/binary/glyphicons-halflings-regular.woff2
+          $TEST_HTTP_EXEC $ROOT_URL/binary/subdir/png.png
 
           # 403
-          TEST_HTTP "ff404.png" 403
-          TEST_HTTP "jpeg404.jpg" 403
-          TEST_HTTP "subdir404/ff.png" 403
-          TEST_HTTP "subdir/ff404.png" 403
+          $TEST_HTTP_EXEC "$ROOT_URL/ff404.png" 403
+          $TEST_HTTP_EXEC "$ROOT_URL/jpeg404.jpg" 403
+          $TEST_HTTP_EXEC "$ROOT_URL/subdir404/ff.png" 403
+          $TEST_HTTP_EXEC "$ROOT_URL/subdir/ff404.png" 403
 
           # 404
-          TEST_HTTP "binary/404-glyphicons-halflings-regular.woff2" 404
-          TEST_HTTP "binary/subdir/404-png.png" 404
+          $TEST_HTTP_EXEC "$ROOT_URL/binary/404-glyphicons-halflings-regular.woff2" 404
+          $TEST_HTTP_EXEC "$ROOT_URL/binary/subdir/404-png.png" 404
 
-      - name: destroy serverless stack
+      - name: cleeanup remote end-to-end test (destroy serverless stack)
         # Run this step even if the prior one failed (to clean up)
         if: ${{ always() }}
         run: |
