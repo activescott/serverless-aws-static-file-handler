@@ -60,21 +60,21 @@ class StaticFileHandler {
       throw new Error("event object not specified.")
     }
 
-    if( event.rawPath ){
+    if (event.rawPath) {
       // convert the V2 API to look like v1 like rest of code expects
 
       // this matches validateLambdaProxyIntegration required props
-      event.resource   = event.requestContext.http.path;
-      event.path       = event.rawPath;
-      event.httpMethod = event.requestContext.http.method;
+      event.resource = event.requestContext.http.path
+      event.path = event.rawPath
+      event.httpMethod = event.requestContext.http.method
       // OK as is event.headers
-      event.multiValueHeaders               = event.headers;
-      event.queryStringParameters           = event.queryStringParamaters;
-      event.multiValueQueryStringParameters = event.queryStringParameters; // Not sure what old code does ?
+      event.multiValueHeaders = event.headers
+      event.queryStringParameters = event.queryStringParamaters
+      event.multiValueQueryStringParameters = event.queryStringParameters // Not sure what old code does ?
       // OK as is event.pathParameters
-      event.stageVariables = event.requestContext.stage; // Not sure we ever pass these ?
+      event.stageVariables = event.requestContext.stage // Not sure we ever pass these ?
       // OK as is event.requestContext
-      event.body = '' // It is a GET, there never is one ?
+      event.body = "" // It is a GET, there never is one ?
       // OK as is event.isBase64Encoded
     }
 
