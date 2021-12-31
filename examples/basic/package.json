@@ -8,7 +8,10 @@
     "deploy": "serverless deploy --aws-profile serverless",
     "destroy": "serverless remove --aws-profile serverless",
     "lint": "prettier --write \"./**/*.{js,md,yml,json,html}\"",
-    "reset": "rm -rfd ./node_modules/ && npm i && npm run deploy"
+    "reset": "rm -rfd ./node_modules/ && npm i && npm run deploy",
+    "//dev-link": "Useful for debugging but don't commit it in this way; use `npm run dev-unlink` before committing. NOTE: Not using `npm link` or `npm add ../..` because that creates a filesystem symlink and serverless.com freaks out when attempting a deploy with a symlinked dependency.",
+    "dev-link": "pushd . ; cd ../.. ; npm pack ; popd ; npm add ../../serverless-aws-static-file-handler-0.0.0.tgz",
+    "dev-unlink": "npm rm serverless-aws-static-file-handler ; npm add serverless-aws-static-file-handler@>=3.0.2-beta.1"
   },
   "devDependencies": {
     "serverless": "^2.52.1"
