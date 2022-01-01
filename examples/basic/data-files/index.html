@@ -37,11 +37,11 @@
 
   <script lang="javascript">
         /**
-         * Returns the root path/prefix that should be used. WILL include the trailing backslash. 
+         * Returns the root path/prefix that should be used. WILL include the trailing backslash.
          * NOTES:
          * In APIG V1 REST APIs the stage is the initial path by default (e.g. `/dev` or `/dev/`).
          * In APIG V2 HTTP APIs there is a default stage specified by default so there may not be one. We deploy this sample though to `/v2` for HTTP APIs so we're catching that or the stage here:
-         */ 
+         */
         function getPathPrefix() {
           // tldr; get the portion of the path up to the first / character. If there is no / character, get the whole thing:
           const len = window.location.pathname.indexOf("/", 1) != -1 ? window.location.pathname.indexOf("/", 1) : window.location.pathname.length
