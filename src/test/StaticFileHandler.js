@@ -16,15 +16,13 @@ function mockEvent(event) {
   return {
     resource: null,
     httpMethod: "GET",
-    requestContext: {
-      httpMethod: "GET",
-    },
     headers: {},
     multiValueHeaders: {},
     queryStringParameters: null,
     multiValueQueryStringParameters: null,
     pathParameters: null,
     stageVariables: null,
+    requestContext: {},
     body: null,
     isBase64Encoded: false,
     ...event,

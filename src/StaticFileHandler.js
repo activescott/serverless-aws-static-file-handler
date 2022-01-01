@@ -5,7 +5,7 @@ const mimetypes = require("mime-types")
 const Mustache = require("mustache")
 const path = require("path")
 const util = require("util")
-const _ = require("lodash")
+
 const readFileAsync = util.promisify(fs.readFile)
 const accessAsync = util.promisify(fs.access)
 
@@ -239,44 +239,32 @@ class StaticFileHandler {
    * Rejects if the specified event is not Lambda Proxy integration
    */
   static async validateLambdaProxyIntegration(event) {
-    /* 
-    There are two different event schemas in API Gateway + Lambda Proxy APIs. One is known as "REST API" or the old V1 API and the newer one is the V2 or "HTTP API". 
-    Each are described at https://docs.aws.amazon.com/lambda/latest/dg/services-apigateway.html#services-apigateway-apitypes
-    You can see examples of each at https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
-    TLDR: 
-    - V2 has a { version: "2.0" } field and { requestContext.http.method: "..." }  field.
-    - V1 has a { version: "1.0" } field and { requestContext.httpMethod: "..." }  field.
-    To set each up in serverless.com:
-    - V1: https://www.serverless.com/framework/docs/providers/aws/events/apigateway
-    - V2: https://www.serverless.com/framework/docs/providers/aws/events/http-api
-    */
-    function isV2ProxyAPI(evt) {
-      return (
-        evt.version === "2.0" &&
-        typeof _.get(evt, "requestContext.http.method") === "string"
-      )
-    }
-    function isV1ProxyAPI(evt) {
-      return (
-        // docs say there is a .version but there isn't!
-        // evt.version === "1.0" &&
-        typeof _.get(evt, "requestContext.httpMethod") === "string"
-      )
-    }
-    // serverless-offline doesn't provide the `isBase64Encoded` prop, but does add the isOffline. Fixes issue #10: https://github.com/activescott/serverless-aws-static-file-handler/issues/10
-    const isServerlessOfflineEnvironment = "isOffline" in event
-    if (!isV1ProxyAPI(event) && !isV2ProxyAPI(event)) {
-      const logProps = [
-        "version",
-        "requestContext.httpMethod",
-        "requestContext.http.method",
-      ]
-      const addendum = logProps
-        .map((propName) => `event.${propName} was '${_.get(event, propName)}'`)
-        .join(" ")
+    // From https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
+    const expectedProps = [
+      "resource",
+      "path",
+      "httpMethod",
+      "headers",
+      "multiValueHeaders",
+      "queryStringParameters",
+      "multiValueQueryStringParameters",
+      "pathParameters",
+      "stageVariables",
+      "requestContext",
+      "body",
+      "isBase64Encoded",
+    ]
+    const missingProps = expectedProps.filter(
+      (propName) => !(propName in event)
+    )
+    // We're using serverless-offline which doesn't provide the `isBase64Encoded` prop, but does add the isOffline. Fixes issue #10: https://github.com/activescott/serverless-aws-static-file-handler/issues/10
+    const isServerlessOfflineEnvironment =
+      missingProps.length === 1 &&
+      missingProps[0] === "isBase64Encoded" &&
+      "isOffline" in event
+    if (missingProps.length > 0 && !isServerlessOfflineEnvironment) {
       throw new Error(
-        "API Gateway method does not appear to be setup for Lambda Proxy Integration. Please confirm that `integration` property of the http event is not specified or set to `integration: proxy`." +
-          addendum
+        `API Gateway method does not appear to be setup for Lambda Proxy Integration. Please confirm that \`integration\` property of the http event is not specified or set to \`integration: proxy\`. Missing lambda proxy property was ${missingProps[0]}`
       )
     }
   }
