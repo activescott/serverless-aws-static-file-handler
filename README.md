@@ -82,7 +82,7 @@ Some additional real-world examples are demonstrated in the [examples/basic/](ex
 
 ## Prerequisites / Usage Requirements
 
-Requires Node.js latest, LTS, or v10 ([tested](https://travis-ci.org/activescott/serverless-aws-static-file-handler)).
+Requires Node.js latest, LTS, or v10 ([tested](https://github.com/activescott/serverless-aws-static-file-handler/actions)).
 
 Requires Serverless Framework v1.x.
 If you are new to the Serverless Framework, check out the [Serverless Framework Getting Started Guide](https://serverless.com/framework/docs/getting-started/).

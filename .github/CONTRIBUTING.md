@@ -13,4 +13,4 @@ Feel free to check [issues page](https://github.com/activescott/serverless-aws-s
 - Fork this repository and [submit a pull request](https://help.github.com/articles/creating-a-pull-request/).
 - Write tests
 - Ensure the linter passes with `yarn lint` or `npm run lint`
-- Ensure the tests pass at [the CI Server](https://travis-ci.org/activescott/serverless-aws-static-file-handler) by [following the status](https://help.github.com/articles/about-statuses/) of your pull request.
+- Ensure the tests pass at the CI Server by [following the status](https://help.github.com/articles/about-statuses/) of your pull request.

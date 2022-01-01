@@ -27,6 +27,7 @@ Examples:
 
 ## Todos:
 
-- [ ] Write tests
-- [ ] Fix linting errors
-- [ ] All tests pass on our CI Server: https://travis-ci.org/activescott/serverless-aws-static-file-handler
+- [ ] Write tests for any changed code. See tests at https://github.com/activescott/serverless-aws-static-file-handler/tree/main/src/test for some examples.
+- [ ] All tests pass at the CI Server by [following the status](https://help.github.com/articles/about-statuses/) of your pull request.
+
+If you need a hand with anything at all tag [activescott](https://github.com/activescott/) in a comment and ask!
