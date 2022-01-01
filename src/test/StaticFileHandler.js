@@ -32,20 +32,21 @@ function mockEvent(event) {
 }
 
 // https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
-function mockEventV2(path, event) {
+function mockEventV2(path,event) {
   return {
-    version: "2.0",
-    routeKey: "$default",
-    rawPath: path,
-    requestContext: {
-      http: {
-        method: "GET",
-        path: path,
-      },
+    "version": "2.0",
+    "routeKey": "$default",
+    "rawPath": path,
+    "requestContext":{
+      "http": {
+        "method": "GET",
+        "path": path
+      }
     },
     ...event,
   }
 }
+
 
 describe("StaticFileHandler", function () {
   describe("constructor", function () {
@@ -363,9 +364,9 @@ describe("StaticFileHandler", function () {
     })
   })
 
-  describe("get (httpApi v2)", function () {
+  describe("get (httpApi v2)",function(){
     it("should return index.html", function () {
-      const event = mockEventV2("index.html")
+      const event = mockEventV2( "index.html" )
       let h = new StaticFileHandler(STATIC_FILES_PATH)
       return h.get(event, null).then((response) => {
         expect(response).to.have.property("statusCode", 200)
@@ -376,9 +377,10 @@ describe("StaticFileHandler", function () {
       })
     })
     it("should support path parameters", function () {
-      const event = mockEventV2("/binary/vendor/output.css.map", {
-        pathParameters: { pathvar: "vendor/output.css.map" },
-      })
+      const event = mockEventV2(
+        "/binary/vendor/output.css.map",
+        {pathParameters: { pathvar: "vendor/output.css.map" }}
+      )
       let h = new StaticFileHandler(STATIC_FILES_PATH)
       const response = h.get(event, null)
       expect(response)
