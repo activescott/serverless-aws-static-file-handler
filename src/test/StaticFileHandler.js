@@ -31,23 +31,6 @@ function mockEvent(event) {
   }
 }
 
-// https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
-function mockEventV2(path,event) {
-  return {
-    "version": "2.0",
-    "routeKey": "$default",
-    "rawPath": path,
-    "requestContext":{
-      "http": {
-        "method": "GET",
-        "path": path
-      }
-    },
-    ...event,
-  }
-}
-
-
 describe("StaticFileHandler", function () {
   describe("constructor", function () {
     it("should not allow empty arg", function () {
@@ -361,35 +344,6 @@ describe("StaticFileHandler", function () {
           return response
         })
       })
-    })
-  })
-
-  describe("get (httpApi v2)",function(){
-    it("should return index.html", function () {
-      const event = mockEventV2( "index.html" )
-      let h = new StaticFileHandler(STATIC_FILES_PATH)
-      return h.get(event, null).then((response) => {
-        expect(response).to.have.property("statusCode", 200)
-        expect(response)
-          .to.have.property("body")
-          .to.match(/^<!DOCTYPE html>/)
-        return response
-      })
-    })
-    it("should support path parameters", function () {
-      const event = mockEventV2(
-        "/binary/vendor/output.css.map",
-        {pathParameters: { pathvar: "vendor/output.css.map" }}
-      )
-      let h = new StaticFileHandler(STATIC_FILES_PATH)
-      const response = h.get(event, null)
-      expect(response)
-        .to.eventually.have.ownProperty("statusCode")
-        .that.equals(200)
-      return expect(response)
-        .to.eventually.haveOwnProperty("body")
-        .that.is.a("string")
-        .and.has.length(107)
     })
   })
 })
