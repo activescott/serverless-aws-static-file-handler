@@ -13,7 +13,7 @@
     "dev-unlink": "npm i"
   },
   "devDependencies": {
-    "serverless": "^2.52.1",
+    "serverless": "^3.1.0",
     "serverless-offline": "^8.0.0"
   },
   "dependencies": {
