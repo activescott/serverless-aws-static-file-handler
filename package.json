@@ -2,7 +2,7 @@
   "name": "serverless-aws-static-file-handler",
   "description": "Easily serve static files with the Serverless Framework on AWS Lambda.",
   "homepage": "https://github.com/activescott/serverless-aws-static-file-handler#readme",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "main": "src/StaticFileHandler.js",
   "author": {
     "name": "Scott Willeke",
