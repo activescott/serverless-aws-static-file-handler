@@ -76,6 +76,7 @@ jobs:
   e2e_tests:
     needs: unit_tests
     runs-on: ubuntu-20.04
+    environment: aws
     env:
       # e2e tests use a shared resource in AWS. Since we trigger on both a push to beta/next and a PR with destination branch of main, a PR against beta/next will cause them to run concurrently and causes errors. To prevent this contention we use a serverless stage.
       # For more information on serverless stages:
@@ -107,7 +108,7 @@ jobs:
           AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          # When dependabot or other forks trigger a workflow these secrets won't be passed (at leat not without the right setup). This makes it easier to spot it in output.
+          # When dependabot or other forks trigger a workflow these secrets won't be passed (at least not without the right setup). This makes it easier to spot it in output.
           if [[ -z "$AWS_KEY_ID" ]]; then
             echo "AWS_KEY_ID not specified (note that Secrets are not passed to workflows that are triggered by a pull request from a fork: https://docs.github.com/en/actions/reference/encrypted-secrets#using-encrypted-secrets-in-a-workflow)"
             exit 1
@@ -164,6 +165,7 @@ jobs:
   publish_package:
     needs: [e2e_tests, unit_tests]
     runs-on: ubuntu-20.04
+    environment: npm
     steps:
       - uses: actions/checkout@v2
 
