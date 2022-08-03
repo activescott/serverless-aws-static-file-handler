@@ -8,8 +8,15 @@ name: build
 on:
   push:
     branches: [main, beta, next]
-  pull_request:
+  # NOTE: `pull_request_target` is insecure per https://securitylab.github.com/research/github-actions-preventing-pwn-requests/.
+  # pull_request_target: GIVES read-WRITE repo token & access to SECRETS
+  # So be sure to cautiously add any jobs/steps here that write to the repo or run any untrusted code
+  pull_request_target:
     branches: [main]
+
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+# since pull_request_target is runs untrusted code by default, we're being very explicit about permissions and requiring each job to request specific permissions (most of our jobs don't need them except deploys)
+permissions: read-all
 
 jobs:
   lint:
@@ -163,6 +170,15 @@ jobs:
           ./node_modules/.bin/serverless remove --aws-profile serverless --stage $SERVERLESS_STAGE
 
   publish_package:
+    # semantic release skips runs for PRs anyway (as it should)
+    if: ${{ github.event_name == 'push' }}
+    # NOTE: permissions here since pull_request_target trigger has a token with WRITE permissions
+    # semantic-release's needed permissions are documented at https://github.com/semantic-release/github#github-authentication
+    permissions:
+      contents: write # to be able to publish a Github release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+
     needs: [e2e_tests, unit_tests]
     runs-on: ubuntu-20.04
     environment: npm
