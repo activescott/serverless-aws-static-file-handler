@@ -12,7 +12,7 @@ on:
   # pull_request_target: GIVES read-WRITE repo token & access to SECRETS
   # So be sure to cautiously add any jobs/steps here that write to the repo or run any untrusted code
   pull_request_target:
-    branches: [main]
+    branches: [main, beta, next]
 
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
 # since pull_request_target is runs untrusted code by default, we're being very explicit about permissions and requiring each job to request specific permissions (most of our jobs don't need them except deploys)
