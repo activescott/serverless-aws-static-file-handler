@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: "Use Node.js (deliberately not using matrix)"
         uses: actions/setup-node@v1
         with:
@@ -37,7 +37,7 @@ jobs:
         node: [10, 12, 14]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node }}
         uses: actions/setup-node@v2
         with:
@@ -74,6 +74,12 @@ jobs:
           parallel-finished: true
 
   e2e_tests:
+    permissions:
+      # NOTE: If you specify the access for any of these scopes, all of those that are not specified are set to none.
+      # for AWS OIDC Token access per https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#updating-your-github-actions-workflow
+      id-token: write
+      contents: read
+      deployments: read
     needs: unit_tests
     runs-on: ubuntu-20.04
     environment: aws
@@ -86,7 +92,7 @@ jobs:
       # github format: https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#format
       SERVERLESS_STAGE: ${{ github.event_name == 'pull_request' && format('pr{0}', github.run_id) || format('push{0}', github.run_id) }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js v12.x
         uses: actions/setup-node@v1
@@ -102,6 +108,15 @@ jobs:
       - name: run local end-to-end test in serverless-offline
         run: |
           "$GITHUB_WORKSPACE/test-files/scripts/test-local-e2e.sh"
+
+      - name: configure aws credentials
+        # Configures AWS credential and region environment variables for use in other GitHub Actions.
+        # The environment variables will be detected by both the AWS SDKs and the AWS CLI to determine the credentials and region to use for AWS API calls.
+        # More on this action at https://github.com/aws-actions/configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::166901232151:role/serverless-aws-static-file-handler-at-github
+          aws-region: us-west-2
 
       - name: prepare to run remote end-to-end test
         env:
@@ -167,7 +182,7 @@ jobs:
     runs-on: ubuntu-20.04
     environment: npm
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js v12.x
         uses: actions/setup-node@v1
