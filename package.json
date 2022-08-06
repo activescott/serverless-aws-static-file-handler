@@ -43,7 +43,7 @@
     "husky": "^7.0.0"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "files": [
     "src/error.html",
