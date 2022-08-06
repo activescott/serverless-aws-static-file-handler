@@ -119,10 +119,8 @@ jobs:
           aws-region: us-west-2
 
       - name: prepare to run remote end-to-end test
-        env:
-          AWS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
+          # NOTE: AWS_KEY_ID and AWS_SECRET_ACCESS_KEY should be injected into the environment by the aws-actions/configure-aws-credentials action above.
           # When dependabot or other forks trigger a workflow these secrets won't be passed (at least not without the right setup). This makes it easier to spot it in output.
           if [[ -z "$AWS_KEY_ID" ]]; then
             echo "AWS_KEY_ID not specified (note that Secrets are not passed to workflows that are triggered by a pull request from a fork: https://docs.github.com/en/actions/reference/encrypted-secrets#using-encrypted-secrets-in-a-workflow)"
