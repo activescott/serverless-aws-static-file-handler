@@ -21,7 +21,7 @@ END_DOC
 
 }
 
-REPO_ROOT_DIR=$(cd "THISDIR" ; pwd)
+REPO_ROOT_DIR=$(cd "$THISDIR/../.." ; pwd)
 echo "Using REPO_ROOT_DIR $REPO_ROOT_DIR"
 
 cd "$REPO_ROOT_DIR/examples/serverless-offline"
@@ -33,10 +33,13 @@ echo "Running npm install completed."
 # run severless-offline in background:
 
 start_serverless_offline() {
+  echo "starting serverless-offline in background..."
   ./node_modules/.bin/serverless offline &
 
   # wait on serverless-offline to start
+  echo "waiting on serverless-offline for 5s..."
   sleep 5
+  echo "waiting on serverless-offline for 5s complete."
 }
 
 start_serverless_offline
