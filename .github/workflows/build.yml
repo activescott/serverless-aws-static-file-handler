@@ -120,10 +120,10 @@ jobs:
 
       - name: prepare to run remote end-to-end test
         run: |
-          # NOTE: AWS_KEY_ID and AWS_SECRET_ACCESS_KEY should be injected into the environment by the aws-actions/configure-aws-credentials action above.
+          # NOTE: AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY should be injected into the environment by the aws-actions/configure-aws-credentials action above.
           # When dependabot or other forks trigger a workflow these secrets won't be passed (at least not without the right setup). This makes it easier to spot it in output.
-          if [[ -z "$AWS_KEY_ID" ]]; then
-            echo "AWS_KEY_ID not specified (note that Secrets are not passed to workflows that are triggered by a pull request from a fork: https://docs.github.com/en/actions/reference/encrypted-secrets#using-encrypted-secrets-in-a-workflow)"
+          if [[ -z "$AWS_ACCESS_KEY_ID" ]]; then
+            echo "AWS_ACCESS_KEY_ID not specified (note that Secrets are not passed to workflows that are triggered by a pull request from a fork: https://docs.github.com/en/actions/reference/encrypted-secrets#using-encrypted-secrets-in-a-workflow)"
             exit 1
           fi
           if [[ -z "$AWS_SECRET_ACCESS_KEY" ]]; then
@@ -135,7 +135,7 @@ jobs:
           npm i
           # now update to use the local plugin built above
           npm install --save file://../../serverless-aws-static-file-handler-0.0.0.tgz
-          ./node_modules/.bin/serverless config credentials --provider aws --key $AWS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile serverless --overwrite
+          ./node_modules/.bin/serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile serverless --overwrite
 
       - name: run remote end-to-end test
         run: |
