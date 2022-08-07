@@ -146,6 +146,7 @@ jobs:
           ./node_modules/.bin/serverless remove --stage $SERVERLESS_STAGE
 
   publish_package:
+    if: ${{ github.event_name != 'pull_request' }}
     needs: [e2e_tests, unit_tests]
     runs-on: ubuntu-20.04
     environment: npm
