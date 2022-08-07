@@ -31,15 +31,18 @@ npm install -s
 echo "Running npm install completed."
 
 # run severless-offline in background:
-
 start_serverless_offline() {
   echo "starting serverless-offline in background..."
   ./node_modules/.bin/serverless offline &
 
   # wait on serverless-offline to start
-  echo "waiting on serverless-offline for 5s..."
-  sleep 5
-  echo "waiting on serverless-offline for 5s complete."
+  SECS=10
+  while [ $SECS -gt 0 ]; do
+    printf "waiting for $SECS seconds for serverless-offline to start serving...\n"
+    sleep 1
+    SECS=`expr $SECS - 1`
+  done
+  printf "waiting for seconds for serverless-offline complete. Continuing with test\n"
 }
 
 start_serverless_offline
