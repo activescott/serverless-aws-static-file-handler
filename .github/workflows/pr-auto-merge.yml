@@ -1,0 +1,7 @@
+on:
+  pull_request_target:
+    types: [auto_merge_enabled, auto_merge_disabled]
+
+jobs:
+  label:
+    uses: activescott/github-actions-workflows/.github/workflows/pr-auto-merge-labeler.yml@pr-auto-merge-labeler-v1
