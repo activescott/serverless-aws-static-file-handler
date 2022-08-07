@@ -30,6 +30,19 @@ updates:
       - dependency-type: "direct"
 
   - package-ecosystem: "npm"
+    directory: "/test-files/webpack-project"
+    schedule:
+      interval: "monthly"
+      # Check for npm updates on Sundays
+      day: "saturday"
+    commit-message:
+      # since these are tests/samples, we'll not require a release of the package
+      prefix: "chore"
+    allow:
+      # Allow only direct updates for all packages
+      - dependency-type: "direct"
+
+  - package-ecosystem: "npm"
     directory: "/examples/basic"
     schedule:
       interval: "monthly"
