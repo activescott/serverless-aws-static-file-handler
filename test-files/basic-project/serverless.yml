@@ -6,9 +6,14 @@ plugins:
 custom:
   apiGateway:
     binaryMediaTypes:
-      - image/png
-      - image/jpeg
-      - "*/*" # Using */* doesn't have side effects that I can tell. The HTML response works fine.
+      # You can use the wildcard character (*) to cover multiple media types per https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-payload-encodings.html
+      # NOTE: Using */* has a side effect as noted at https://github.com/activescott/serverless-aws-static-file-handler
+      # IANA descrete type wildcards from: https://www.iana.org/assignments/media-types/media-types.xhtml
+      - application/*
+      - audio/*
+      - font/*
+      - image/*
+      - video/*
 
 provider:
   name: aws
