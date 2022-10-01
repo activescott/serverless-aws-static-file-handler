@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "serverless": "^3.1.1",
-    "serverless-offline": "^9.1.6"
+    "serverless-offline": "^11.0.1"
   },
   "dependencies": {
     "serverless-aws-static-file-handler": ">=3.0.2-beta.1"
