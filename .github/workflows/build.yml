@@ -11,6 +11,10 @@ on:
   pull_request:
     branches: [main]
 
+# Allow one concurrent build & deployment
+concurrency:
+  group: "build"
+
 jobs:
   unit_tests:
     runs-on: ubuntu-20.04
