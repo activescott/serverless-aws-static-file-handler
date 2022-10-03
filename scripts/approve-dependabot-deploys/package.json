@@ -1,0 +1,16 @@
+{
+  "name": "approve-dependabot-deploys",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "approve-dependabot-deploys.mjs",
+  "scripts": {
+    "start": "node approve-dependabot-deploys.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "octokit": "^2.0.7"
+  }
+}

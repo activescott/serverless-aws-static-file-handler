@@ -13,3 +13,4 @@ exclude:
   - examples/
   - release.config.js
   - test-files/
+  - scripts/
