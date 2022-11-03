@@ -21,7 +21,7 @@
     "file-loader": "^6.2.0",
     "serverless": "^3.22.0",
     "serverless-offline": "^11.2.3",
-    "serverless-webpack": "^5.9",
+    "serverless-webpack": "^5.10",
     "webpack": "^5.74.0",
     "webpack-node-externals": "^3.0.0"
   }
