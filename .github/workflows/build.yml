@@ -11,9 +11,10 @@ on:
   pull_request:
     branches: [main]
 
-# Allow one concurrent build & deployment
+# Allow one concurrent build for the same branch
 concurrency:
-  group: "build"
+  group: current-branch-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   unit_tests:
@@ -60,6 +61,12 @@ jobs:
           parallel-finished: true
 
   e2e_tests:
+    # Allow only one concurrent deployment for the target branch:
+    ## no reason to run the long-running AWS e2e tests until we are sure this one will be viable
+    ## NOTE: we could separate e2e_tests job into a e2e_tests_local and e2e_tests_remote since the local ones are quite a lot faster
+    concurrency:
+      group: target-branch-${{ github.base_ref }}
+
     permissions:
       # NOTE: If you specify the access for any of these scopes, all of those that are not specified are set to none.
       # for AWS OIDC Token access per https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#updating-your-github-actions-workflow
