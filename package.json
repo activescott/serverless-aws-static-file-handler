@@ -26,7 +26,6 @@
     "serverless-functions"
   ],
   "dependencies": {
-    "lodash": "^4.17.11",
     "mime-types": "^2.1.21",
     "mustache": "^4.0.0"
   },
