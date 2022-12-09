@@ -5,7 +5,6 @@ const mimetypes = require("mime-types")
 const Mustache = require("mustache")
 const path = require("path")
 const util = require("util")
-const _ = require("lodash")
 const readFileAsync = util.promisify(fs.readFile)
 const accessAsync = util.promisify(fs.access)
 
