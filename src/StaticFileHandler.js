@@ -5,9 +5,45 @@ const mimetypes = require("mime-types")
 const Mustache = require("mustache")
 const path = require("path")
 const util = require("util")
-const _ = require("lodash")
 const readFileAsync = util.promisify(fs.readFile)
 const accessAsync = util.promisify(fs.access)
+
+// originally from lodash, but never called with a defaultValue
+// https://gist.github.com/jeneg/9767afdcca45601ea44930ea03e0febf
+function __get(value, path, defaultValue) {
+  return String(path)
+    .split(".")
+    .reduce((acc, v) => {
+      if (v.startsWith("[")) {
+        const [, arrPart] = v.split("[")
+        v = arrPart.split("]")[0]
+      }
+
+      if (v.endsWith("]") && !v.startsWith("[")) {
+        const [objPart, arrPart, ...rest] = v.split("[")
+        const [firstIndex] = arrPart.split("]")
+        const otherParts = rest
+          .join("")
+          .replaceAll("[", "")
+          .replaceAll("]", ".")
+          .split(".")
+          .filter((str) => str !== "")
+
+        return [...acc, objPart, firstIndex, ...otherParts]
+      }
+
+      return [...acc, v]
+    }, [])
+    .reduce((acc, v) => {
+      try {
+        acc = acc[v] !== undefined ? acc[v] : defaultValue
+      } catch (e) {
+        return defaultValue
+      }
+
+      return acc
+    }, value)
+}
 
 class StaticFileHandler {
   /**
@@ -253,14 +289,14 @@ class StaticFileHandler {
     function isV2ProxyAPI(evt) {
       return (
         evt.version === "2.0" &&
-        typeof _.get(evt, "requestContext.http.method") === "string"
+        typeof __get(evt, "requestContext.http.method") === "string"
       )
     }
     function isV1ProxyAPI(evt) {
       return (
         // docs say there is a .version but there isn't!
         // evt.version === "1.0" &&
-        typeof _.get(evt, "requestContext.httpMethod") === "string"
+        typeof __get(evt, "requestContext.httpMethod") === "string"
       )
     }
     // serverless-offline doesn't provide the `isBase64Encoded` prop, but does add the isOffline. Fixes issue #10: https://github.com/activescott/serverless-aws-static-file-handler/issues/10
@@ -272,7 +308,7 @@ class StaticFileHandler {
         "requestContext.http.method",
       ]
       const addendum = logProps
-        .map((propName) => `event.${propName} was '${_.get(event, propName)}'`)
+        .map((propName) => `event.${propName} was '${__get(event, propName)}'`)
         .join(" ")
       throw new Error(
         "API Gateway method does not appear to be setup for Lambda Proxy Integration. Please confirm that `integration` property of the http event is not specified or set to `integration: proxy`." +
