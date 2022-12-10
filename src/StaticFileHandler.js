@@ -12,38 +12,38 @@ const accessAsync = util.promisify(fs.access)
 // https://gist.github.com/jeneg/9767afdcca45601ea44930ea03e0febf
 function __get(value, path, defaultValue) {
   return String(path)
-    .split('.')
+    .split(".")
     .reduce((acc, v) => {
-      if (v.startsWith('[')) {
-        const [, arrPart] = v.split('[');
-        v = arrPart.split(']')[0];
+      if (v.startsWith("[")) {
+        const [, arrPart] = v.split("[")
+        v = arrPart.split("]")[0]
       }
 
-      if (v.endsWith(']') && !v.startsWith('[')) {
-        const [objPart, arrPart, ...rest] = v.split('[');
-        const [firstIndex] = arrPart.split(']');
+      if (v.endsWith("]") && !v.startsWith("[")) {
+        const [objPart, arrPart, ...rest] = v.split("[")
+        const [firstIndex] = arrPart.split("]")
         const otherParts = rest
-          .join('')
-          .replaceAll('[', '')
-          .replaceAll(']', '.')
-          .split('.')
-          .filter(str => str !== '');
+          .join("")
+          .replaceAll("[", "")
+          .replaceAll("]", ".")
+          .split(".")
+          .filter((str) => str !== "")
 
-        return [...acc, objPart, firstIndex, ...otherParts];
+        return [...acc, objPart, firstIndex, ...otherParts]
       }
 
-      return [...acc, v];
+      return [...acc, v]
     }, [])
     .reduce((acc, v) => {
       try {
-        acc = acc[v] !== undefined ? acc[v] : defaultValue;
+        acc = acc[v] !== undefined ? acc[v] : defaultValue
       } catch (e) {
-        return defaultValue;
+        return defaultValue
       }
 
-      return acc;
-    }, value);
-};
+      return acc
+    }, value)
+}
 
 class StaticFileHandler {
   /**
