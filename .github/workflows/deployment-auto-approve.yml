@@ -9,8 +9,8 @@ jobs:
     steps:
       - name: Verify Deployment
         env:
-          DEPLOYMENT_USER_LOGIN: ${{ github.event.deployment.user.login }}
-          DEPLOYMENT_USER_URL: ${{ github.event.deployment.user.url }}
+          DEPLOYMENT_USER_LOGIN: ${{ github.event.deployment.creator.login }}
+          DEPLOYMENT_USER_URL: ${{ github.event.deployment.creator.url }}
           DEPLOYMENT_ENVIRONMENT: ${{ github.event.deployment.environment }}
         run: |
           echo "DEPLOYMENT_USER_LOGIN: ${DEPLOYMENT_USER_LOGIN}"
