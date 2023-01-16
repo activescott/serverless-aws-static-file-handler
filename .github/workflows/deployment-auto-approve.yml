@@ -1,3 +1,4 @@
+name: Deployment Auto-Approver
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#deployment
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
 on: [deployment, workflow_dispatch]
@@ -6,10 +7,21 @@ jobs:
   auto_approve:
     runs-on: ubuntu-latest
     steps:
+      - name: Verify Deployment
+        env:
+          DEPLOYMENT_USER_LOGIN: ${{ github.event.deployment.user.login }}
+          DEPLOYMENT_USER_URL: ${{ github.event.deployment.user.url }}
+          DEPLOYMENT_ENVIRONMENT: ${{ github.event.deployment.environment }}
+        run: |
+          echo "DEPLOYMENT_USER_LOGIN: ${DEPLOYMENT_USER_LOGIN}"
+          echo "DEPLOYMENT_USER_URL: ${DEPLOYMENT_USER_URL}"
+          echo "DEPLOYMENT_ENVIRONMENT: ${DEPLOYMENT_ENVIRONMENT}"
+
       - name: Auto approve
+        if: false
         # 7cef3de3dcfa68b55e3952f8dd836ca10e51af64 is from Nov 15, 2022
         # https://github.com/ambilykk/deployment-auto-approve
         uses: ambilykk/deployment-auto-approve@7cef3de3dcfa68b55e3952f8dd836ca10e51af64
         with:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           environment: aws
