@@ -7,7 +7,7 @@ jobs:
   auto_approve:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify Deployment
+      - name: Log Deployment Details
         env:
           DEPLOYMENT_USER_LOGIN: ${{ github.event.deployment.creator.login }}
           DEPLOYMENT_USER_URL: ${{ github.event.deployment.creator.url }}
@@ -17,8 +17,8 @@ jobs:
           echo "DEPLOYMENT_USER_URL: ${DEPLOYMENT_USER_URL}"
           echo "DEPLOYMENT_ENVIRONMENT: ${DEPLOYMENT_ENVIRONMENT}"
 
-      - name: Auto approve
-        if: false
+      - name: Auto Approve
+        if: github.event.deployment.creator.login == 'dependabot[bot]' || github.event.deployment.creator.login == 'activescott'
         # 7cef3de3dcfa68b55e3952f8dd836ca10e51af64 is from Nov 15, 2022
         # https://github.com/ambilykk/deployment-auto-approve
         uses: ambilykk/deployment-auto-approve@7cef3de3dcfa68b55e3952f8dd836ca10e51af64
