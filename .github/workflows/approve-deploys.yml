@@ -1,0 +1,22 @@
+name: Deployment Auto-Approver
+# using triggers for every deployment and allowed manually
+# docs on these triggers:
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#deployment
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
+on: [workflow_dispatch]
+
+jobs:
+  auto_approve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto Approve Deploys
+        uses: activescott/automate-environment-deployment-approval@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          environment_allow_list: |
+            your-environment-name
+            your-other-environment-name
+          # e.g. "dependabot[bot]"
+          actor_allow_list: |
+            github-login-name-to-auto-approve
+            other-github-login-name-to-auto-approve
