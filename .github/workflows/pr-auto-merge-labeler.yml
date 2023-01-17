@@ -1,3 +1,4 @@
+name: Label PR with Auto-Merge Status
 on:
   pull_request_target:
     types: [auto_merge_enabled, auto_merge_disabled]
