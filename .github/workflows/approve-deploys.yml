@@ -3,7 +3,7 @@ name: Deployment Auto-Approver
 # docs on these triggers:
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#deployment
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
-on: [workflow_dispatch]
+on: [deployment, workflow_dispatch]
 
 jobs:
   auto_approve:
