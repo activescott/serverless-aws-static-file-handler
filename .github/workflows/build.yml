@@ -156,26 +156,6 @@ jobs:
           echo "Destroying serverless stage $SERVERLESS_STAGE"
           ./node_modules/.bin/serverless remove --stage $SERVERLESS_STAGE
 
-  auto_approve_deployment:
-    needs: unit_tests
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Log Deployment Details
-        env:
-          DEPLOYMENT_USER_LOGIN: ${{ github.event.pull_request.user.login }}
-          DEPLOYMENT_USER_URL: ${{ github.event.pull_request.url }}
-        run: |
-          echo "DEPLOYMENT_USER_LOGIN: ${DEPLOYMENT_USER_LOGIN}"
-          echo "DEPLOYMENT_USER_URL: ${DEPLOYMENT_USER_URL}"
-      - name: Auto Approve
-        if: github.event.pull_request.user.login == 'dependabot[bot]' || github.event.pull_request.user.login == 'activescott'
-        # 7cef3de3dcfa68b55e3952f8dd836ca10e51af64 is from Nov 15, 2022
-        # https://github.com/ambilykk/deployment-auto-approve
-        uses: ambilykk/deployment-auto-approve@7cef3de3dcfa68b55e3952f8dd836ca10e51af64
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          environment: aws
-
   publish_package:
     if: ${{ github.event_name != 'pull_request' }}
     needs: [e2e_tests, unit_tests]
