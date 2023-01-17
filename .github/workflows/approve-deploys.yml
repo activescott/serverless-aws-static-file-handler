@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Auto Approve Deploys
-        uses: activescott/automate-environment-deployment-approval@master
+        uses: activescott/automate-environment-deployment-approval@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           environment_allow_list: |
