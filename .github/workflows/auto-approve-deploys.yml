@@ -13,7 +13,7 @@ jobs:
       - name: Auto Approve Deploys
         uses: activescott/automate-environment-deployment-approval@main
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN_FOR_AUTO_APPROVING_DEPLOYS }}
           environment_allow_list: |
             aws
           # e.g. "dependabot[bot]"
