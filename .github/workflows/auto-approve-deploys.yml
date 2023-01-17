@@ -15,9 +15,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           environment_allow_list: |
-            your-environment-name
-            your-other-environment-name
+            aws
           # e.g. "dependabot[bot]"
           actor_allow_list: |
-            github-login-name-to-auto-approve
-            other-github-login-name-to-auto-approve
+            dependabot[bot]
+            activescott
