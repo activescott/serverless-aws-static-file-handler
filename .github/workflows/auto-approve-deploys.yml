@@ -1,10 +1,14 @@
 name: Deployment Auto-Approver
 # using triggers for every deployment and allowed manually
 # docs on these triggers:
-# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#deployment
-# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
-# test
-on: [deployment, workflow_dispatch]
+on:
+  # allows manually triggering (see https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch)
+  workflow_dispatch:
+  schedule:
+    # 08:30 UTC daily (see https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule)
+    - cron: "30 08 * * *"
+  # the only problem with the 'deployment' trigger is that dependabot PRs are considered from forked repos and the token doesn't have permission to approve (see https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#deployment)
+  # deployment:
 
 jobs:
   auto_approve:
