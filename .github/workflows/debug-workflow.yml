@@ -18,6 +18,8 @@ jobs:
         id: set_ref
         env:
           GITHUB_HEAD_REF: ${{ github.head_ref }}
+        # The intent here is to checkout the PR's branch/commit head when it is an open PR
+        # ...but checkout the target branch's head commit when it is a PR being merged or a commit directly to the branch.
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]] && [[ "${{ github.event.pull_request.merged }}" == "false" ]]; then
             echo "REF=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
