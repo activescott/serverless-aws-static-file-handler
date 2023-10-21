@@ -90,7 +90,8 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          # NOTE: in v13.0, serverless-offline removed support for node v14: https://github.com/dherault/serverless-offline/releases/tag/v13.0.0
+          node-version: 18
 
       - name: build plugin locally
         run: |
