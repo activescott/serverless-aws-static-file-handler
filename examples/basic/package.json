@@ -14,7 +14,7 @@
     "dev-unlink": "npm rm serverless-aws-static-file-handler ; npm add serverless-aws-static-file-handler@>=3.0.2-beta.1"
   },
   "devDependencies": {
-    "serverless": "^3.1.0"
+    "serverless": "^3.37.0"
   },
   "dependencies": {
     "serverless-aws-static-file-handler": ">=3.0.2-beta.1"
