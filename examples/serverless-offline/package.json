@@ -13,8 +13,8 @@
     "dev-unlink": "npm i"
   },
   "devDependencies": {
-    "serverless": "^3.1.1",
-    "serverless-offline": "^13.2.0"
+    "serverless": "^3.37.0",
+    "serverless-offline": "^13.3.0"
   },
   "dependencies": {
     "serverless-aws-static-file-handler": ">=3.0.2-beta.1"
