@@ -20,7 +20,7 @@
     "babel-plugin-source-map-support": "^2.2.0",
     "file-loader": "^6.2.0",
     "serverless": "^3.35.2",
-    "serverless-offline": "^13.3.2",
+    "serverless-offline": "^13.3.3",
     "serverless-webpack": "^5.13",
     "webpack": "^5.90.1",
     "webpack-node-externals": "^3.0.0"
