@@ -41,7 +41,7 @@
     "sinon": "^11.1.2"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "files": [
     "src/error.html",
