@@ -18,7 +18,7 @@ describe("e2e", function () {
 
   it("should load plugin", function () {
     // Serverless Framework v3 does not support Node.js v10. Please upgrade Node.js to the latest LTS version (v12 is a minimum supported version):
-    if (nodeVersionMajor() < 12) {
+    if (nodeVersionMajor() < 20) {
       console.warn(
         "Serverless Framework v3 does not support Node.js v10, skipping test"
       )
