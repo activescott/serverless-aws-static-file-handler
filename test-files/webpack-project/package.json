@@ -15,7 +15,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.4",
     "@babel/plugin-transform-runtime": "^7.28.3",
-    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-env": "^7.28.3",
     "babel-loader": "^10.0.0",
     "babel-plugin-source-map-support": "^2.2.0",
     "file-loader": "^6.2.0",
