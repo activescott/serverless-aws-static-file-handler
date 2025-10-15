@@ -162,13 +162,20 @@ jobs:
     needs: [e2e_tests, unit_tests]
     runs-on: ubuntu-20.04
     environment: npm
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Update npm
+        run: npm install -g npm@latest
 
       #- name: debug publish_package
       #  uses: actions/bin/debug@master
