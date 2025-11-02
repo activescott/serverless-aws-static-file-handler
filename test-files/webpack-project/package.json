@@ -22,7 +22,7 @@
     "serverless": "^3.35.2",
     "serverless-offline": "^13.3.3",
     "serverless-webpack": "^5.15",
-    "webpack": "^5.102.0",
+    "webpack": "^5.102.1",
     "webpack-node-externals": "^3.0.0"
   }
 }
