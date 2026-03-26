@@ -1,4 +1,5 @@
 service: static-file-handler-demo-offline
+frameworkVersion: "3"
 
 plugins:
   - serverless-offline
