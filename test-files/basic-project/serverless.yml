@@ -1,4 +1,5 @@
 service: static-file-handler-test-basic
+frameworkVersion: "3"
 
 plugins:
   - serverless-aws-static-file-handler/plugins/BinaryMediaTypes
