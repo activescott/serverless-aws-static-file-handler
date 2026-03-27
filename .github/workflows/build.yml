@@ -18,15 +18,17 @@ concurrency:
 
 jobs:
   unit_tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         node: [20, 22]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: "npm"
@@ -42,7 +44,7 @@ jobs:
           npm run test
 
       - name: publish coverage
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -51,10 +53,10 @@ jobs:
 
   update_code_coverage:
     needs: unit_tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -74,7 +76,7 @@ jobs:
       contents: read
       deployments: read
     needs: unit_tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     environment: aws
     env:
       # e2e tests use a shared resource in AWS. Since we trigger on both a push to beta/next and a PR with destination branch of main, a PR against beta/next will cause them to run concurrently and causes errors. To prevent this contention we use a serverless stage.
@@ -85,10 +87,10 @@ jobs:
       # github format: https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#format
       SERVERLESS_STAGE: ${{ github.event_name == 'pull_request' && format('pr{0}', github.run_id) || format('push{0}', github.run_id) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           # NOTE: in v13.0, serverless-offline removed support for node v14: https://github.com/dherault/serverless-offline/releases/tag/v13.0.0
           node-version: 20
@@ -107,7 +109,7 @@ jobs:
         # Configures AWS credential and region environment variables for use in other GitHub Actions.
         # The environment variables will be detected by both the AWS SDKs and the AWS CLI to determine the credentials and region to use for AWS API calls.
         # More on this action at https://github.com/aws-actions/configure-aws-credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::166901232151:role/serverless-aws-static-file-handler-at-github
           aws-region: us-west-2
@@ -160,7 +162,7 @@ jobs:
   publish_package:
     if: ${{ github.event_name != 'pull_request' }}
     needs: [e2e_tests, unit_tests]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     environment: npm
     permissions:
       id-token: write # Required for OIDC
