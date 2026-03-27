@@ -164,6 +164,9 @@ jobs:
     needs: [e2e_tests, unit_tests]
     runs-on: ubuntu-latest
     environment: npm
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -171,6 +174,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Update npm
+        run: npm install -g npm@latest
 
       #- name: debug publish_package
       #  uses: actions/bin/debug@master
