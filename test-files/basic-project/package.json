@@ -8,7 +8,7 @@
     "destroy": "serverless remove"
   },
   "devDependencies": {
-    "serverless": "^4.17.2"
+    "serverless": "^3"
   },
   "dependencies": {
     "serverless-aws-static-file-handler": "file:../../serverless-aws-static-file-handler-0.0.0.tgz"
