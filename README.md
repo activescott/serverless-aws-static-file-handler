@@ -11,6 +11,8 @@ Host the front-end of your web applications on [Serverless framework](https://gi
 
 It is a fast and easy way to get started and makes it trivial to deploy your web applications. If you need better response time in the future and get concerned about AWS costs of using Lambda to static content, you put CloudFront in front of your Serverless endpoints service static content.
 
+> **Note on Serverless Framework & Node.js version support:** This project currently supports **Serverless Framework v3** and **Node.js 20** (the `nodejs20.x` Lambda runtime). Supporting the `nodejs22.x` Lambda runtime [requires upgrading to Serverless Framework v4](https://github.com/serverless/serverless/issues/12922#issuecomment-2563870220), which I haven't done yet. I maintain a number of open source projects and want to dedicate my time to the ones people are actively using. If you'd like to see support for Serverless v4 and Node.js 22, please [open an issue](https://github.com/activescott/serverless-aws-static-file-handler/issues) requesting it or submit a pull request — I'm happy to support it! — _Scott Willeke_
+
 <!-- TOC -->
 
 - [Usage / Quick Start](#usage--quick-start)
@@ -82,9 +84,9 @@ Some additional real-world examples are demonstrated in the [examples/basic/](ex
 
 ## Prerequisites / Usage Requirements
 
-Requires Node.js latest, LTS, or v10 ([tested](https://github.com/activescott/serverless-aws-static-file-handler/actions)).
+Requires Node.js 20 ([tested](https://github.com/activescott/serverless-aws-static-file-handler/actions)).
 
-Requires Serverless Framework v1.x.
+Requires Serverless Framework v3.
 If you are new to the Serverless Framework, check out the [Serverless Framework Getting Started Guide](https://serverless.com/framework/docs/getting-started/).
 
 ## Install
