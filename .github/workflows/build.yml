@@ -165,26 +165,23 @@ jobs:
     runs-on: ubuntu-latest
     environment: npm
     permissions:
-      id-token: write # Required for OIDC
-      contents: read
+      id-token: write # Required for npm provenance / OIDC trusted publishing
+      contents: write # Required for semantic-release to push tags and create releases
     steps:
       - uses: actions/checkout@v4
 
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
 
       - name: Update npm
         run: npm install -g npm@latest
 
-      #- name: debug publish_package
-      #  uses: actions/bin/debug@master
-
       - name: publish to npm
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           npm install
-          npx semantic-release@17
+          npx semantic-release@25
