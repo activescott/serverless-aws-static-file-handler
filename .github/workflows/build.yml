@@ -167,6 +167,8 @@ jobs:
     permissions:
       id-token: write # Required for npm provenance / OIDC trusted publishing
       contents: write # Required for semantic-release to push tags and create releases
+      issues: write # Required for semantic-release to comment on referenced issues
+      pull-requests: write # Required for semantic-release to comment on referenced PRs
     steps:
       - uses: actions/checkout@v4
 
