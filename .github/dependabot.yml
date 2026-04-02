@@ -9,6 +9,9 @@ updates:
       day: "saturday"
     allow:
       - dependency-type: "production"
+    ignore:
+      - dependency-name: "serverless"
+        update-types: ["version-update:semver-major"]
     commit-message:
       # for production deps, prefix commit messages with "fix" (trigger a patch release)
       prefix: "fix"
@@ -28,6 +31,9 @@ updates:
     allow:
       # Allow only direct updates for all packages
       - dependency-type: "direct"
+    ignore:
+      - dependency-name: "serverless"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "npm"
     directory: "/test-files/webpack-project"
@@ -41,6 +47,9 @@ updates:
     allow:
       # Allow only direct updates for all packages
       - dependency-type: "direct"
+    ignore:
+      - dependency-name: "serverless"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "npm"
     directory: "/examples/basic"
@@ -54,6 +63,9 @@ updates:
     allow:
       # Allow only direct updates for all packages
       - dependency-type: "direct"
+    ignore:
+      - dependency-name: "serverless"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "npm"
     directory: "/examples/serverless-offline"
@@ -67,3 +79,6 @@ updates:
     allow:
       # Allow only direct updates for all packages
       - dependency-type: "direct"
+    ignore:
+      - dependency-name: "serverless"
+        update-types: ["version-update:semver-major"]
