@@ -11,7 +11,7 @@ updates:
       - dependency-type: "production"
     ignore:
       - dependency-name: "serverless"
-        update-types: ["version-update:semver-major"]
+        versions: [">=4"]
     commit-message:
       # for production deps, prefix commit messages with "fix" (trigger a patch release)
       prefix: "fix"
@@ -33,7 +33,7 @@ updates:
       - dependency-type: "direct"
     ignore:
       - dependency-name: "serverless"
-        update-types: ["version-update:semver-major"]
+        versions: [">=4"]
 
   - package-ecosystem: "npm"
     directory: "/test-files/webpack-project"
@@ -49,7 +49,7 @@ updates:
       - dependency-type: "direct"
     ignore:
       - dependency-name: "serverless"
-        update-types: ["version-update:semver-major"]
+        versions: [">=4"]
 
   - package-ecosystem: "npm"
     directory: "/examples/basic"
@@ -65,7 +65,7 @@ updates:
       - dependency-type: "direct"
     ignore:
       - dependency-name: "serverless"
-        update-types: ["version-update:semver-major"]
+        versions: [">=4"]
 
   - package-ecosystem: "npm"
     directory: "/examples/serverless-offline"
@@ -81,4 +81,7 @@ updates:
       - dependency-type: "direct"
     ignore:
       - dependency-name: "serverless"
-        update-types: ["version-update:semver-major"]
+        versions: [">=4"]
+      # serverless-offline v14+ requires Serverless Framework v4
+      - dependency-name: "serverless-offline"
+        versions: [">=14"]
