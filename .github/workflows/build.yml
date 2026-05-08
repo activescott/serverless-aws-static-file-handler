@@ -175,11 +175,11 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # Node 24 ships with npm 11, which is required for npm OIDC trusted publishing (>=11.5.1).
+          # Node 22's bundled npm 10 forced a `npm install -g npm@latest` self-upgrade step,
+          # which broke after a regression in Node 22.22.2's toolcache npm (npm/cli#9151).
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
-
-      - name: Update npm
-        run: npm install -g npm@latest
 
       - name: publish to npm
         env:
