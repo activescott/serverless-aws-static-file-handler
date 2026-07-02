@@ -13,9 +13,9 @@
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.7",
-    "@babel/plugin-transform-runtime": "^7.29.7",
-    "@babel/preset-env": "^7.29.7",
+    "@babel/core": "^8.0.1",
+    "@babel/plugin-transform-runtime": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
     "babel-loader": "^10.1.1",
     "babel-plugin-source-map-support": "^2.2.0",
     "file-loader": "^6.2.0",
