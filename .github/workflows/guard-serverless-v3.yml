@@ -1,0 +1,59 @@
+# Guards against upgrading the Serverless Framework beyond v3.
+# This project is pinned to Serverless Framework v3 (see the note in README.md).
+# Dependabot's ignore rules in .github/dependabot.yml only apply to *version* updates.
+# Dependabot *security* updates ignore both `allow` and `ignore` rules, and will bump
+# "ancestor" dependencies (like serverless) to any version needed to fix a vulnerable
+# transitive dependency — e.g. PR #434 bumped serverless 3.x -> 4.x to fix brace-expansion.
+# Combined with the dependabot auto-merge workflow, such a PR could merge silently.
+# This check fails whenever serverless v4+ appears in any package.json or package-lock.json,
+# and it is a required status check on main so it blocks auto-merge.
+name: guard-serverless-v3
+on:
+  push:
+    branches: [main, beta, next]
+  pull_request:
+    branches: [main]
+
+jobs:
+  serverless_version_check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: fail if Serverless Framework v4+ is present
+        run: |
+          set -euo pipefail
+          failed=0
+
+          # Direct dependency ranges in every package.json
+          for manifest in $(git ls-files '*package.json'); do
+            for dep_type in dependencies devDependencies; do
+              range=$(jq -r --arg t "$dep_type" '.[$t].serverless // empty' "$manifest")
+              if [ -n "$range" ]; then
+                major=$(printf '%s' "$range" | grep -o '[0-9]\+' | head -1)
+                if [ "${major:-0}" -ge 4 ]; then
+                  echo "::error file=$manifest::serverless \"$range\" found in $manifest — this project is pinned to Serverless Framework v3 (see README.md)"
+                  failed=1
+                fi
+              fi
+            done
+          done
+
+          # Resolved versions in every package-lock.json
+          for lockfile in $(git ls-files '*package-lock.json'); do
+            version=$(jq -r '.packages["node_modules/serverless"].version // empty' "$lockfile")
+            if [ -n "$version" ]; then
+              major=${version%%.*}
+              if [ "$major" -ge 4 ]; then
+                echo "::error file=$lockfile::serverless resolved to $version in $lockfile — this project is pinned to Serverless Framework v3 (see README.md)"
+                failed=1
+              fi
+            fi
+          done
+
+          if [ "$failed" -eq 0 ]; then
+            echo "OK: no Serverless Framework v4+ found in any manifest or lockfile"
+          fi
+          exit "$failed"

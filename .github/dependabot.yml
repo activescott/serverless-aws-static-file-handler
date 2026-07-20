@@ -1,4 +1,9 @@
 version: 2
+# NOTE: The `ignore` and `allow` rules below apply ONLY to Dependabot *version* updates.
+# Dependabot *security* updates ignore both, and will bump "ancestor" dependencies
+# (e.g. serverless v3 -> v4) as needed to fix a vulnerable transitive dependency.
+# The guard-serverless-v3 workflow (a required status check on main) is what actually
+# prevents a serverless v4 upgrade from merging.
 updates:
   # docs v2 https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/configuration-options-for-dependency-updates
   - package-ecosystem: "npm"
