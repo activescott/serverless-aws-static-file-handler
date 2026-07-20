@@ -29,10 +29,10 @@ jobs:
 
           # Direct dependency ranges in every package.json
           for manifest in $(git ls-files '*package.json'); do
-            for dep_type in dependencies devDependencies; do
+            for dep_type in dependencies devDependencies peerDependencies optionalDependencies; do
               range=$(jq -r --arg t "$dep_type" '.[$t].serverless // empty' "$manifest")
               if [ -n "$range" ]; then
-                major=$(printf '%s' "$range" | grep -o '[0-9]\+' | head -1)
+                major=$(printf '%s' "$range" | grep -o '[0-9]\+' | head -1 || true)
                 if [ "${major:-0}" -ge 4 ]; then
                   echo "::error file=$manifest::serverless \"$range\" found in $manifest — this project is pinned to Serverless Framework v3 (see README.md)"
                   failed=1
