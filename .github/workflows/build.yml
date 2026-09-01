@@ -106,7 +106,7 @@ jobs:
           "$GITHUB_WORKSPACE/test-files/scripts/test-local-e2e.sh"
 
       - name: configure aws credentials
-        if: ${{ github.event.pull_request.head.repo.fork == false }}
+        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
         # Configures AWS credential and region environment variables for use in other GitHub Actions.
         # The environment variables will be detected by both the AWS SDKs and the AWS CLI to determine the credentials and region to use for AWS API calls.
         # More on this action at https://github.com/aws-actions/configure-aws-credentials
@@ -116,7 +116,7 @@ jobs:
           aws-region: us-west-2
 
       - name: prepare to run remote end-to-end test
-        if: ${{ github.event.pull_request.head.repo.fork == false }}
+        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           npm i
@@ -124,7 +124,7 @@ jobs:
           npm install --save file://../../serverless-aws-static-file-handler-0.0.0.tgz
 
       - name: run remote end-to-end test
-        if: ${{ github.event.pull_request.head.repo.fork == false }}
+        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           echo "Deploying serverless stage $SERVERLESS_STAGE"
@@ -156,7 +156,7 @@ jobs:
 
       - name: cleanup remote end-to-end test (destroy serverless stack)
         # Run this step even if the prior one failed (to clean up)
-        if: ${{ always() && github.event.pull_request.head.repo.fork == false }}
+        if: ${{ always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) }}
         run: |
           cd "$GITHUB_WORKSPACE/examples/basic"
           echo "Destroying serverless stage $SERVERLESS_STAGE"
