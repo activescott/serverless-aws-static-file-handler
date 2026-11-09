@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>ping-poet/.github"],
+  "extends": ["github>activescott/.github"],
   "packageRules": [
     {
       "description": "guard-serverless-v3 is a required check on main that blocks a serverless v4 upgrade; keep Renovate from proposing one across the root, test-files and examples projects. Mirrors .github/dependabot.yml's old ignore rule.",
