@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>activescott/.github"],
+  "packageRules": [
+    {
+      "description": "guard-serverless-v3 is a required check on main that blocks a serverless v4 upgrade; keep Renovate from proposing one across the root, test-files and examples projects. Mirrors .github/dependabot.yml's old ignore rule.",
+      "matchPackageNames": ["serverless"],
+      "allowedVersions": "<4.0.0"
+    },
+    {
+      "description": "examples/serverless-offline pins serverless-offline below v14 to match its serverless v3 dependency there. test-files/webpack-project already runs serverless-offline 14 and isn't affected.",
+      "matchPackageNames": ["serverless-offline"],
+      "matchFileNames": ["examples/serverless-offline/**"],
+      "allowedVersions": "<14.0.0"
+    }
+  ]
+}
