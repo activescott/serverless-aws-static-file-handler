@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
           cache: "npm"
@@ -90,7 +90,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           # NOTE: in v13.0, serverless-offline removed support for node v14: https://github.com/dherault/serverless-offline/releases/tag/v13.0.0
           node-version: 20
@@ -176,7 +176,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           # Node 24 ships with npm 11, which is required for npm OIDC trusted publishing (>=11.5.1).
           # Node 22's bundled npm 10 forced a `npm install -g npm@latest` self-upgrade step,
