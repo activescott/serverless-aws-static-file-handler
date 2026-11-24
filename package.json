@@ -30,7 +30,7 @@
     "mustache": "^4.0.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
+    "chai": "^6.0.0",
     "chai-as-promised": "^7.1.1",
     "husky": "^7.0.0",
     "js-yaml": "^4.0.0",
